@@ -11,7 +11,7 @@ export default function Home() {
     <div className="w-full bg-white">
       <Navbar />
       
-      <div className="h-screen">
+      <div className="flex">
       <Sidebar />
       </div>
     </div>

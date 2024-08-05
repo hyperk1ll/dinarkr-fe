@@ -40,7 +40,7 @@ export default function ProdukPage() {
 }
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full  bg-white">
       <Navbar />
       <div className="flex">
         <Sidebar />
