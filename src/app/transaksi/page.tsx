@@ -22,6 +22,7 @@ export default function TransaksiPage() {
   const [dinarOptions, setDinarOptions] = useState<Produk[]>([]);
   const [formData, setFormData] = useState({
     tipe_transaksi: "",
+    pembelian_dari: "",
     tanggal_transaksi: "",
     nama_pembeli: "",
     detail: [{ id_dinar: "", jumlah: "", harga_satuan: "" }],
@@ -43,6 +44,21 @@ export default function TransaksiPage() {
 
     fetchDinarOptions();
   }, []);
+
+  useEffect(() => {
+    if (formData.tipe_transaksi === "beli" && formData.pembelian_dari === "web") {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        nama_pembeli: "-",
+      }));
+    }
+    else {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            nama_pembeli: "",
+        }));
+    }
+  }, [formData.tipe_transaksi, formData.pembelian_dari]);
 
   const handleInputChange = (index, field, value) => {
     const updatedDetails = formData.detail.map((detail, i) =>
@@ -68,7 +84,7 @@ export default function TransaksiPage() {
     e.preventDefault();
 
     // check if all fields are filled
-    const isFormValid = formData.tipe_transaksi && formData.tanggal_transaksi && formData.nama_pembeli && formData.detail.every(detail => detail.id_dinar && detail.jumlah && detail.harga_satuan);
+    const isFormValid = formData.tipe_transaksi && formData.pembelian_dari && formData.tanggal_transaksi && formData.nama_pembeli && formData.detail.every(detail => detail.id_dinar && detail.jumlah && detail.harga_satuan);
 
     //minimum 1 detail
     if (formData.detail.length < 1) {
@@ -104,6 +120,7 @@ export default function TransaksiPage() {
 
       setFormData({
         tipe_transaksi: "",
+        pembelian_dari: "",
         tanggal_transaksi: "",
         nama_pembeli: "",
         detail: [{ id_dinar: "", jumlah: "", harga_satuan: "" }],
@@ -128,7 +145,14 @@ export default function TransaksiPage() {
               <select
                 className="mt-1 block w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
                 value={formData.tipe_transaksi}
-                onChange={(e) => setFormData({ ...formData, tipe_transaksi: e.target.value })}
+                onChange={(e) => {
+                    const tipeTransaksi = e.target.value;
+                    setFormData({
+                      ...formData,
+                      tipe_transaksi: tipeTransaksi,
+                      pembelian_dari: tipeTransaksi === "jual" ? "-" : formData.pembelian_dari,
+                    });
+                  }}
               >
 
                 <option value="" className="text-gray-200" selected disabled>Pilih Tipe Transaksi</option>
@@ -137,6 +161,21 @@ export default function TransaksiPage() {
                 <option value="hadiah">Hadiah</option>
               </select>
             </div>
+            {formData.tipe_transaksi !== "jual" && (
+            <div className="mb-4">
+              <label className="block text-gray-700">Pembelian Dari</label>
+              <select
+                className="mt-1 block w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
+                value={formData.pembelian_dari}
+                onChange={(e) => setFormData({ ...formData, pembelian_dari: e.target.value })}
+              >
+
+                <option value="" className="text-gray-200" selected disabled>Pilih Asal Pembelian</option>
+                <option value="web">Web</option>
+                <option value="buyback">Buyback</option>
+              </select>
+            </div>
+            )}
             <div className="mb-4">
               <label className="block text-gray-700 ">Tanggal Transaksi</label>
               <input
@@ -146,16 +185,18 @@ export default function TransaksiPage() {
                 onChange={(e) => setFormData({ ...formData, tanggal_transaksi: e.target.value })}
               />
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Nama Pembeli</label>
-              <input
-                type="text"
-                className="mt-1 block w-full border p-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Masukkan Nama Pembeli"
-                value={formData.nama_pembeli}
-                onChange={(e) => setFormData({ ...formData, nama_pembeli: e.target.value })}
-              />
-            </div>
+            {(formData.tipe_transaksi === "jual" || (formData.tipe_transaksi === "beli" && formData.pembelian_dari === "buyback")) && (
+              <div className="mb-4">
+                <label className="block text-gray-700">{formData.tipe_transaksi === 'beli' ? 'Dibeli Dari' : 'Dijual Kepada'}</label>
+                <input
+                  type="text"
+                  className="mt-1 block w-full border p-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder={`${formData.tipe_transaksi === 'beli' ? 'Masukkan Nama Penjual' : 'Masukkan Nama Pembeli'}`}
+                  value={formData.nama_pembeli}
+                  onChange={(e) => setFormData({ ...formData, nama_pembeli: e.target.value })}
+                />
+              </div>
+            )}
             {formData.detail.map((detail, index) => (
               <div key={index} className="mb-4 border p-4 rounded-md">
                 <h2 className="text-lg font-semibold mb-2">Produk {index + 1}</h2>
