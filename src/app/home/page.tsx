@@ -4,7 +4,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import React, { useEffect, useState } from "react";
 import BarChart from "../../components/Barchart/Barchart";
-import { FaBox, FaFileInvoice, FaDollarSign, FaMoneyBill, FaBuysellads } from "react-icons/fa";
+import { FaBox, FaFileInvoice, FaDollarSign, FaMoneyBill } from "react-icons/fa";
 
 
 
