@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 export default function Detail_Modal({ isOpen, onClose, details }) {
-  const [dinarData, setDinarData] = useState([]);
+  const [dinarData, setDinarData] = useState<{ id: number; nama: string }[]>([]);
 
   useEffect(() => {
     // Fetch dinar data from your API

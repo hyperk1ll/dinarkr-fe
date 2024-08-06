@@ -6,7 +6,7 @@ import Detail_Modal from "../../components/Detail_Modal/Detail_Modal";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function RiwayatTransaksiPage() {
+export default function TransaksiBeliPage() {
     
 
     interface Transaction {
@@ -27,7 +27,7 @@ export default function RiwayatTransaksiPage() {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/transaksi/get-all-transaksi`); // replace with your API endpoint
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/transaksi/get-transaksi-beli`); // replace with your API endpoint
         if (!response.data.error) {
           // Group transactions by id_transaksi and calculate total price
             const groupedTransactions = response.data.data.reduce((acc, item) => {
@@ -90,7 +90,7 @@ export default function RiwayatTransaksiPage() {
       <div className="flex min-h-screen">
         <Sidebar />
         <div className="p-4 w-full">
-          <h1 className="text-2xl font-bold mb-4">Riwayat Transaksi</h1>
+          <h1 className="text-2xl font-bold mb-4">Transaksi Pembelian</h1>
           {transactions.length > 0 ? (
             <div className="rounded-lg border border-gray-200 overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200 border">

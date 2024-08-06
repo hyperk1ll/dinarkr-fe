@@ -1,10 +1,15 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
+import { ChartOptions } from 'chart.js';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-export default function Barchart({ data }) {
+interface BarchartProps {
+    data: { label: string; value: number }[];
+  }
+
+  export default function Barchart({ data }: BarchartProps) {
   const chartData = {
     labels: data.map((item) => item.label),
     datasets: [
@@ -26,7 +31,7 @@ export default function Barchart({ data }) {
     ],
   };
 
-  const options = {
+  const options: ChartOptions<'bar'> = {
     responsive: true,
     plugins: {
       legend: {

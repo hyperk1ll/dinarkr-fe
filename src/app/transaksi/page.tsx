@@ -150,7 +150,7 @@ export default function TransaksiPage() {
                     setFormData({
                       ...formData,
                       tipe_transaksi: tipeTransaksi,
-                      pembelian_dari: tipeTransaksi === "jual" ? "-" : formData.pembelian_dari,
+                      pembelian_dari: tipeTransaksi === "jual" || tipeTransaksi === "hadiah" ? "-" : formData.pembelian_dari,
                     });
                   }}
               >
@@ -161,7 +161,7 @@ export default function TransaksiPage() {
                 <option value="hadiah">Hadiah</option>
               </select>
             </div>
-            {formData.tipe_transaksi !== "jual" && (
+            {formData.tipe_transaksi === "beli" && (
             <div className="mb-4">
               <label className="block text-gray-700">Pembelian Dari</label>
               <select
@@ -185,13 +185,13 @@ export default function TransaksiPage() {
                 onChange={(e) => setFormData({ ...formData, tanggal_transaksi: e.target.value })}
               />
             </div>
-            {(formData.tipe_transaksi === "jual" || (formData.tipe_transaksi === "beli" && formData.pembelian_dari === "buyback")) && (
+            {((formData.tipe_transaksi === "jual" || formData.tipe_transaksi === "hadiah") || (formData.tipe_transaksi === "beli" && formData.pembelian_dari === "buyback")) && (
               <div className="mb-4">
-                <label className="block text-gray-700">{formData.tipe_transaksi === 'beli' ? 'Dibeli Dari' : 'Dijual Kepada'}</label>
+                <label className="block text-gray-700">{formData.tipe_transaksi === 'beli' ? 'Dibeli Dari' : formData.tipe_transaksi === 'jual' ? 'Dijual Kepada' : 'Didapat Dari'}</label>
                 <input
                   type="text"
                   className="mt-1 block w-full border p-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder={`${formData.tipe_transaksi === 'beli' ? 'Masukkan Nama Penjual' : 'Masukkan Nama Pembeli'}`}
+                  placeholder={`${formData.tipe_transaksi === 'beli' ? 'Masukkan Nama Penjual' : formData.tipe_transaksi === 'jual' ? 'Masukkan Nama Pembeli' : ''}`}
                   value={formData.nama_pembeli}
                   onChange={(e) => setFormData({ ...formData, nama_pembeli: e.target.value })}
                 />
