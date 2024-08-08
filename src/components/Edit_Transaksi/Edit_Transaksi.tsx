@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
-const EditTransaksi = ({ transaksi, onClose, onSubmit }) => {
+const EditTransaksi = ({ transaksi, onClose, onSubmit }: any) => {
+    interface DinarOption {
+    id: number;
+    nama: string;
+  }
+  
+  
   const [formData, setFormData] = useState({
     tipe_transaksi: "",
     pembelian_dari: "",
@@ -11,8 +18,8 @@ const EditTransaksi = ({ transaksi, onClose, onSubmit }) => {
     ...transaksi,  // Spread the incoming props to override defaults
   });
 
-  const [dinarOptions, setDinarOptions] = useState([]);
-
+  const [dinarOptions, setDinarOptions] = useState<DinarOption[]>([]);
+  
   useEffect(() => {
     const fetchDinarOptions = async () => {
       try {
@@ -20,7 +27,7 @@ const EditTransaksi = ({ transaksi, onClose, onSubmit }) => {
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/produk/get-dinar`
         );
         if (!response.data.error) {
-          const sortedData = response.data.data.sort((a, b) => a.id - b.id);
+          const sortedData = response.data.data.sort((a: { id: number; }, b: { id: number; }) => a.id - b.id);
           setDinarOptions(sortedData);
         }
       } catch (error) {
@@ -32,16 +39,45 @@ const EditTransaksi = ({ transaksi, onClose, onSubmit }) => {
   }, []);
 
   useEffect(() => {
+    console.log("Transaksi diterima:", transaksi);
     if (transaksi) {
-      setFormData({
-        ...formData,
-        ...transaksi,
-        detail: transaksi.detail || [{ id_dinar: "", jumlah: "", harga_satuan: "" }],
-      });
+      setFormData((prevFormData: any) => ({
+        ...prevFormData,
+        tipe_transaksi: transaksi.tipe_transaksi || "",
+        pembelian_dari: transaksi.pembelian_dari || "",
+        tanggal_transaksi: transaksi.tanggal_transaksi || "",
+        nama_pembeli: transaksi.nama_pembeli || "",
+        detail: transaksi.details || [{ id_dinar: "", jumlah: "", harga_satuan: "" }],
+      }));
     }
   }, [transaksi]);
 
-  const handleChange = (e) => {
+  useEffect(() => {
+    if (formData.tipe_transaksi === "beli" && formData.pembelian_dari === "web") {
+      setFormData((prevFormData: any) => ({
+        ...prevFormData,
+        nama_pembeli: "-",
+      }));
+    }
+  }, [formData.tipe_transaksi, formData.pembelian_dari]);
+
+  
+
+  // useEffect to update total price when product details change
+  useEffect(() => {
+    const updatedTotalHarga = formData.detail.reduce((total: number, item: { jumlah: any; harga_satuan: any; }) => {
+      const itemTotal = (item.jumlah || 0) * (item.harga_satuan || 0);
+      return total + itemTotal;
+    }, 0);
+
+    setFormData((prevFormData: any) => ({
+      ...prevFormData,
+      totalHarga: updatedTotalHarga,  // Update the total price
+    }));
+  }, [formData.detail]);
+  
+
+  const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -49,8 +85,8 @@ const EditTransaksi = ({ transaksi, onClose, onSubmit }) => {
     });
   };
 
-  const handleDetailChange = (index, field, value) => {
-    const updatedDetails = formData.detail.map((detail, i) =>
+  const handleDetailChange = (index: any, field: string, value: string) => {
+    const updatedDetails = formData.detail.map((detail: any, i: any) =>
       i === index ? { ...detail, [field]: value } : detail
     );
     setFormData({ ...formData, detail: updatedDetails });
@@ -63,30 +99,40 @@ const EditTransaksi = ({ transaksi, onClose, onSubmit }) => {
     });
   };
 
-  const removeDetail = (index) => {
-    const updatedDetails = formData.detail.filter((_, i) => i !== index);
+  const removeDetail = (index: any) => {
+    const updatedDetails = formData.detail.filter((_: any, i: any) => i !== index);
     setFormData({ ...formData, detail: updatedDetails });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     
-    const isFormValid = formData.tipe_transaksi && formData.pembelian_dari && formData.tanggal_transaksi && formData.nama_pembeli && formData.detail.every(detail => detail.id_dinar && detail.jumlah && detail.harga_satuan);
+    const isFormValid = formData.tipe_transaksi && formData.pembelian_dari && formData.tanggal_transaksi && formData.nama_pembeli && formData.detail.every((detail: { id_dinar: any; jumlah: any; harga_satuan: any; }) => detail.id_dinar && detail.jumlah && detail.harga_satuan);
     
     if (formData.detail.length < 1) {
-      alert('Harap Isi minimal 1 produk');
+      Swal.fire({
+        title: 'Error',
+        text: 'Harap Isi minimal 1 produk',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
       return;
     }
 
     if (!isFormValid) {
-      alert('Harap Isi Semua Field');
+      Swal.fire({
+        title: 'Error',
+        text: 'Harap Isi Semua Field',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
       return;
     }
 
     onSubmit(formData);
   };
 
-  const formatDate = (dateStr) => {
+  const formatDate = (dateStr: string | number | Date) => {
     // Mengonversi string tanggal ke objek Date
     const date = new Date(dateStr);
 
@@ -103,7 +149,7 @@ const EditTransaksi = ({ transaksi, onClose, onSubmit }) => {
     return `${day}/${month}/${year} ${hours}:${minutes}`;
 };
 
-const convertToDatetimeLocalFormat = (dateStr) => {
+const convertToDatetimeLocalFormat = (dateStr: string | number | Date) => {
   const date = new Date(dateStr);
 
   // Mendapatkan komponen tahun, bulan, hari, jam, dan menit
@@ -181,9 +227,9 @@ const convertToDatetimeLocalFormat = (dateStr) => {
               />
             </div>
           )}
-          {formData.detail && formData.detail.map((detail, index) => (
+          {formData.detail && formData.detail.map((detail: { id_dinar: string | number | readonly string[] | undefined; jumlah: string | number | readonly string[] | undefined; harga_satuan: string | number | readonly string[] | undefined; }, index: React.Key | null | undefined) => (
             <div key={index} className="mb-4 border p-4 rounded-md">
-              <h2 className="text-lg font-semibold mb-2">Produk {index + 1}</h2>
+              <h2 className="text-lg font-semibold mb-2">Produk {Number(index ?? 0) + 1}</h2>
               <div className="mb-2">
                 <select
                   value={detail.id_dinar}
@@ -197,6 +243,7 @@ const convertToDatetimeLocalFormat = (dateStr) => {
                 </select>
               </div>
               <div className="mb-2">
+              <label className="block text-gray-700">Jumlah</label>
                 <input
                   type="number"
                   className="mt-1 block w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
@@ -206,6 +253,7 @@ const convertToDatetimeLocalFormat = (dateStr) => {
                 />
               </div>
               <div className="mb-2">
+              <label className="block text-gray-700">Harga Satuan</label>
                 <input
                   type="number"
                   className="mt-1 block w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
@@ -216,16 +264,16 @@ const convertToDatetimeLocalFormat = (dateStr) => {
               </div>
               <button
                 type="button"
-                className="bg-red-500 text-white px-4 py-2 rounded mt-2"
+                className="mt-2 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
                 onClick={() => removeDetail(index)}
               >
-                Hapus Produk
+                Hapus
               </button>
             </div>
           ))}
           <button
             type="button"
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             onClick={addDetail}
           >
             Tambah Produk
@@ -233,13 +281,14 @@ const convertToDatetimeLocalFormat = (dateStr) => {
           <div className="mt-4">
             <button
               type="submit"
-              className="bg-green-500 text-white px-4 py-2 rounded"
+              className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+              onClick={handleSubmit}
             >
               Simpan
             </button>
             <button
               type="button"
-              className="bg-gray-500 text-white px-4 py-2 rounded ml-2"
+              className="focus:outline-none text-white bg-gray-500 hover:bg-gray-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
               onClick={onClose}
             >
               Cancel

@@ -9,6 +9,7 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import Detail_Modal from "@/components/Detail_Modal/Detail_Modal";
 import Edit_Transaksi from "@/components/Edit_Transaksi/Edit_Transaksi";
 import Delete_Modal from "@/components/Delete_Modal/Delete_Modal";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 export default function RiwayatTransaksiPage() {
   interface Transaction {
@@ -25,61 +26,62 @@ export default function RiwayatTransaksiPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedDetails, setSelectedDetails] = useState([]);
+  const [selectedDetails, setSelectedDetails] = useState<any[]>([]);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [selectedDelete, setSelectedDelete] = useState<Transaction | null>(null);
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/transaksi/get-all-transaksi`
+  const fetchTransactions = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/transaksi/get-all-transaksi`
+      );
+      if (!response.data.error) {
+        const groupedTransactions = response.data.data.reduce(
+          (acc: Transaction[], item: any) => {
+            const existingTransaction = acc.find(
+              (trans) => trans.id_transaksi === item.id_transaksi
+            );
+            const totalHarga = item.jumlah * item.harga_satuan;
+            if (existingTransaction) {
+              existingTransaction.details.push({
+                id_dinar: item.id_dinar,
+                jumlah: item.jumlah,
+                harga_satuan: item.harga_satuan,
+                totalHarga,
+              });
+              existingTransaction.totalHarga += totalHarga;
+            } else {
+              acc.push({
+                id_transaksi: item.id_transaksi,
+                tipe_transaksi: item.tipe_transaksi,
+                pembelian_dari: item.pembelian_dari,
+                tanggal_transaksi: item.tanggal_transaksi,
+                nama_pembeli: item.nama_pembeli,
+                totalHarga,
+                details: [
+                  {
+                    id_dinar: item.id_dinar,
+                    jumlah: item.jumlah,
+                    harga_satuan: item.harga_satuan,
+                    totalHarga,
+                  },
+                ],
+              });
+            }
+            return acc;
+          },
+          []
         );
-        if (!response.data.error) {
-          const groupedTransactions = response.data.data.reduce(
-            (acc: Transaction[], item: any) => {
-              const existingTransaction = acc.find(
-                (trans) => trans.id_transaksi === item.id_transaksi
-              );
-              const totalHarga = item.jumlah * item.harga_satuan;
-              if (existingTransaction) {
-                existingTransaction.details.push({
-                  id_dinar: item.id_dinar,
-                  jumlah: item.jumlah,
-                  harga_satuan: item.harga_satuan,
-                  totalHarga,
-                });
-                existingTransaction.totalHarga += totalHarga;
-              } else {
-                acc.push({
-                  id_transaksi: item.id_transaksi,
-                  tipe_transaksi: item.tipe_transaksi,
-                  pembelian_dari: item.pembelian_dari,
-                  tanggal_transaksi: item.tanggal_transaksi,
-                  nama_pembeli: item.nama_pembeli,
-                  totalHarga,
-                  details: [
-                    {
-                      id_dinar: item.id_dinar,
-                      jumlah: item.jumlah,
-                      harga_satuan: item.harga_satuan,
-                      totalHarga,
-                    },
-                  ],
-                });
-              }
-              return acc;
-            },
-            []
-          );
-          setTransactions(groupedTransactions);
-        }
-      } catch (error) {
-        console.error("Error fetching transactions:", error);
+        setTransactions(groupedTransactions);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchTransactions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleEdit = (transaction: Transaction) => {
@@ -114,14 +116,17 @@ export default function RiwayatTransaksiPage() {
         updatedTransaction
       );
       if (!response.data.error) {
-        setTransactions(
-          transactions.map((t) =>
-            t.id_transaksi === updatedTransaction.id_transaksi
-              ? updatedTransaction
-              : t
-          )
-        );
+        // Refetch transactions after a successful update
+        await fetchTransactions();
+
         closeEditModal();
+
+        Swal.fire({
+          title: 'Sukses',
+          text: 'Data transaksi berhasil diubah',
+          icon: 'success',
+          confirmButtonText: 'Oke',
+        });
       }
     } catch (error) {
       console.error("Error updating transaction:", error);
@@ -160,7 +165,7 @@ export default function RiwayatTransaksiPage() {
     }
   };
 
-  const formatDate = (dateStr) => {
+  const formatDate = (dateStr: string | number | Date) => {
     const date = new Date(dateStr);
 
     // Mengurangi satu jam
@@ -269,22 +274,22 @@ export default function RiwayatTransaksiPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <button
-                          className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                          className="bg-blue-500 text-white px-4 py-2 rounded mr-2 align-middle"
                           onClick={() => handleDetailClick(transaction.details)}
                         >
                           Lihat Detail
                         </button>
                         <button
-                          className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                          className="bg-green-500 text-white px-4 py-2 rounded mr-2 align-middle"
                           onClick={() => handleEdit(transaction)}
                         >
-                          Edit
+                          <FaEdit size={20} height={10} /> {/* Edit icon */}
                         </button>
                         <button
-                          className="bg-red-500 text-white px-4 py-2 rounded"
+                          className="bg-red-500 text-white px-4 py-2 rounded align-middle"
                           onClick={() => handleDeleteClick(transaction)}
                         >
-                          Delete
+                          <FaTrash size={20} /> {/* Delete icon */}
                         </button>
                       </td>
                     </tr>
