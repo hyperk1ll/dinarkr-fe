@@ -169,7 +169,7 @@ export default function RiwayatTransaksiPage() {
     const date = new Date(dateStr);
 
     // Mengurangi satu jam
-    date.setHours(date.getHours() - 1);
+    date.setHours(date.getHours());
 
     const options = {
         day: '2-digit',
@@ -228,13 +228,13 @@ export default function RiwayatTransaksiPage() {
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
                     >
                       Total Harga
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider text-center"
                     >
                       Aksi
                     </th>

@@ -39,7 +39,7 @@ export default function Home() {
 
         // Calculate the stored assets or profit
         const isStoredAssets = totals.totalPembelian > totals.totalPenjualan;
-        const selisih = Math.abs(totals.totalPenjualan - totals.totalPembelian);
+        var selisih = Math.abs(totals.totalPenjualan - totals.totalPembelian);
         const selisihLabel = isStoredAssets ? "Aset Tersimpan" : "Keuntungan";
 
         const formattedData = [
@@ -51,8 +51,9 @@ export default function Home() {
         setChartData(formattedData);
         setTotalProduk(totals.totalProduk);
         setJumlahTransaksi(totals.totalTransaksi);
-        setKeuntungan(totals.totalPenjualan - totals.totalPembelian); // Assuming 'Keuntungan' refers to total profit
+        setKeuntungan(selisih *= -1); // Assuming 'Keuntungan' refers to total profit
         setTotalPembelian(totals.totalPembelian);
+        
         setTotalPenjualan(totals.totalPenjualan);
       } catch (error) {
         console.error("Error fetching data:", error);
