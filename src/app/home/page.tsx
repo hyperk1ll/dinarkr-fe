@@ -6,8 +6,6 @@ import React, { useEffect, useState } from "react";
 import BarChart from "../../components/Barchart/Barchart";
 import { FaBox, FaFileInvoice, FaDollarSign, FaMoneyBill } from "react-icons/fa";
 
-
-
 export default function Home() {
   const [chartData, setChartData] = useState<{ label: string; value: number; }[]>([]);
   const [totalProduk, setTotalProduk] = useState(0);
@@ -15,11 +13,12 @@ export default function Home() {
   const [keuntungan, setKeuntungan] = useState(0);
   const [totalPembelian, setTotalPembelian] = useState(0);
   const [totalPenjualan, setTotalPenjualan] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/transaksi/get-all-transaksi`); // Adjust the API endpoint as needed
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/transaksi/get-all-transaksi`);
         const data = await response.json();
 
         const transactions = data.data;
@@ -53,15 +52,26 @@ export default function Home() {
         setJumlahTransaksi(totals.totalTransaksi);
         setKeuntungan(selisih *= -1); // Assuming 'Keuntungan' refers to total profit
         setTotalPembelian(totals.totalPembelian);
-        
         setTotalPenjualan(totals.totalPenjualan);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false); // Set loading state to false after data is fetched
       }
     }
 
     fetchData();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="text-2xl font-semibold text-gray-700">
+          Loading...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full bg-white">
@@ -89,10 +99,8 @@ export default function Home() {
             <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
               <FaMoneyBill className="text-green-700 text-3xl mr-4" />
               <div>
-                <h2 className="text-lg font-semibold">{totalPembelian > totalPenjualan ? "Total Aset" :  "Keuntungan"}</h2>
-                <p className="text-2xl font-bold">{}
-                  
-                  {(keuntungan * -1).toLocaleString("id-ID", {
+                <h2 className="text-lg font-semibold">{totalPembelian > totalPenjualan ? "Total Aset" : "Keuntungan"}</h2>
+                <p className="text-2xl font-bold">{(keuntungan * -1).toLocaleString("id-ID", {
                   style: "currency",
                   currency: "IDR",
                 })}</p>
@@ -119,7 +127,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-          
 
           <div className="w-2/3 h-2/3 mt-8 border rounded-md bg-gray-100 border-gray-200 shadow-md">
             <BarChart data={chartData} />

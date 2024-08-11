@@ -10,16 +10,28 @@ import React from 'react';
 export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [navbarOpen, setNavbarOpen] = useState(false);
-
-  const [user, setUser] = useState<{ nama_user: string } | null>(null);
+  const [user, setUser] = useState<{ nama_user: string; email: string } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
-    const nama_user = localStorage.getItem('nama_user');
-    if (nama_user) {
-      setUser({ nama_user });
+    async function fetchData() {
+      try {
+        const nama_user = localStorage.getItem('nama_user');
+        const email = localStorage.getItem('email');
+
+        if (nama_user && email) {
+          setUser({ nama_user, email });
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setIsLoading(false); // Set loading state to false after data is fetched
+      }
     }
+
+    fetchData();
   }, []);
 
   const handleLogout = async () => {
@@ -39,6 +51,7 @@ export default function Navbar() {
 
         localStorage.removeItem('authToken');
         localStorage.removeItem('nama_user');
+        localStorage.removeItem('email');
         setUser(null);
         router.push('/');
       }
@@ -46,6 +59,17 @@ export default function Navbar() {
       console.error('Logout failed:', error);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="text-2xl font-semibold text-gray-700">
+          Loading...
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <nav className="bg-blue-600 border-gray-200">
@@ -68,7 +92,7 @@ export default function Navbar() {
             <div className="absolute top-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow " id="user-dropdown">
               <div className="px-4 py-3">
                 <span className="block text-sm text-gray-900 ">{user?.nama_user}</span>
-                <span className="block text-sm text-gray-500 truncate ">name@flowbite.com</span>
+                <span className="block text-sm text-gray-500 truncate ">{user?.email}</span>
               </div>
               <ul className="py-2" aria-labelledby="user-menu-button">
                 <li>

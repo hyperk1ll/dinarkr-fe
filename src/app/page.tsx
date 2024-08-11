@@ -8,10 +8,12 @@ import axios from 'axios';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
+    setIsLoading(true);  // Set loading state to true when login is initiated
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, {
         email,
@@ -21,11 +23,14 @@ export default function Login() {
       const { token, nama } = response.data;
       localStorage.setItem('authToken', token);
       localStorage.setItem('nama_user', nama);
+      localStorage.setItem('email', email);
 
       router.push('/home');
     } catch (error) {
       console.error('Login failed:', error);
       alert('Login failed. Please check your credentials and try again.');
+    } finally {
+      setIsLoading(false);  // Set loading state to false after login attempt is finished
     }
   };
 
@@ -71,9 +76,12 @@ export default function Login() {
             </div>
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                isLoading ? 'bg-blue-400' : 'bg-blue-500 hover:bg-blue-600'
+              } text-white`}
+              disabled={isLoading}
             >
-              Login
+              {isLoading ? 'Logging in...' : 'Login'}
             </button>
           </form>
           <p className="mt-4 text-sm text-center text-gray-600">
@@ -86,6 +94,4 @@ export default function Login() {
       </div>
     </div>
   );
-};
-
-
+}

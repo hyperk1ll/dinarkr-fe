@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { format } from 'date-fns';
 
 const EditTransaksi = ({ transaksi, onClose, onSubmit }: any) => {
     interface DinarOption {
@@ -130,38 +131,22 @@ const EditTransaksi = ({ transaksi, onClose, onSubmit }: any) => {
     }
 
     onSubmit(formData);
+    console.log("Form data submitted:", formData);
   };
 
-  const formatDate = (dateStr: string | number | Date) => {
-    // Mengonversi string tanggal ke objek Date
-    const date = new Date(dateStr);
 
-    date.setHours(date.getHours());
-
-    // Format tanggal ke DD/MM/YY HH:mm:ss
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
-    const year = date.getFullYear().toString()
-    const hours = String((date.getHours() - 1)).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-
-    return `${day}/${month}/${year} ${hours}:${minutes}`;
-};
-
-const convertToDatetimeLocalFormat = (dateStr: string | number | Date) => {
+// Format untuk menampilkan waktu lokal dalam format custom
+const formatDate = (dateStr: string | number | Date) => {
   const date = new Date(dateStr);
 
-  // Mendapatkan komponen tahun, bulan, hari, jam, dan menit
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
+  const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours() - 1).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
   const minutes = String(date.getMinutes()).padStart(2, '0');
-
-  // Format sesuai dengan datetime-local
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
 };
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
@@ -209,7 +194,7 @@ const convertToDatetimeLocalFormat = (dateStr: string | number | Date) => {
             <input
               type="datetime-local"
               name="tanggal_transaksi"
-              value={convertToDatetimeLocalFormat(formData.tanggal_transaksi)}
+              value={formatDate(formData.tanggal_transaksi)}
               onChange={handleChange}
               className="mt-1 block w-full border rounded-md p-2 border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
