@@ -15,6 +15,12 @@ export default function Home() {
   const [totalPenjualan, setTotalPenjualan] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const handleSidebarToggle = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -75,9 +81,9 @@ export default function Home() {
 
   return (
     <div className="w-full bg-white">
-      <Navbar />
+      <Navbar onSidebarToggle={handleSidebarToggle}/>
       <div className="flex min-h-screen">
-        <Sidebar />
+        <Sidebar  isSidebarOpen={isSidebarOpen}  />
         <div className="flex-1 p-4 mb-2">
           <h1 className="text-2xl font-semibold mb-4">Dashboard</h1>
 

@@ -13,7 +13,7 @@ export default function Login() {
 
   const handleLogin = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    setIsLoading(true);  // Set loading state to true when login is initiated
+    setIsLoading(true);
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, {
         email,
@@ -30,23 +30,33 @@ export default function Login() {
       console.error('Login failed:', error);
       alert('Login failed. Please check your credentials and try again.');
     } finally {
-      setIsLoading(false);  // Set loading state to false after login attempt is finished
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className='flex flex-row w-2/3'>
-        <Image src="/login-pic.jpeg" alt="logo" width={520} height={100} style={{
-            objectFit: "cover",
-            borderTopLeftRadius: "6px",
-            borderBottomLeftRadius: "6px"
-          }} />
-        <div className="w-full p-8 bg-white rounded-lg shadow-lg">
-          <div className='flex flex-col items-center'>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+      <div className="flex flex-col md:flex-row sm:flex-col-reverse w-full max-w-4xl bg-white rounded-lg shadow-lg">
+        <div className="md:w-1/2">
+          <Image
+            src="/login-pic.jpeg"
+            alt="logo"
+            width={520}
+            height={100}
+            style={{
+              objectFit: "cover",
+              borderTopLeftRadius: "6px",
+              borderTopRightRadius: "6px",
+              borderBottomLeftRadius: "6px",
+              borderBottomRightRadius: "6px"
+            }}
+            className="w-full h-full object-cover rounded-t-lg md:rounded-l-lg md:rounded-tr-none"
+          />
+        </div>
+        <div className="w-full md:w-1/2 sm:mb-2 p-8 flex flex-col justify-center">
+          <div className="flex flex-col items-center">
             <Image src="/logo-text.png" alt="Logo" width={150} height={150} />
           </div>
-          <div className=''>
           <span className="text-l text-start text-gray-800">Harap Masukkan Email dan Password!</span>
           
           <form onSubmit={handleLogin} className="space-y-4 mt-2">
@@ -88,8 +98,6 @@ export default function Login() {
             Don&apos;t have an account?
             <a href="/register" className="text-blue-500 hover:underline"> Register</a>
           </p>
-          </div>
-          
         </div>
       </div>
     </div>
