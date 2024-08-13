@@ -81,32 +81,32 @@ export default function Home() {
 
   return (
     <div className="w-full bg-white">
-      <Navbar onSidebarToggle={handleSidebarToggle}/>
-      <div className="flex min-h-screen">
-        <Sidebar  isSidebarOpen={isSidebarOpen}  />
+      <Navbar onSidebarToggle={handleSidebarToggle} />
+      <div className="flex flex-col md:flex-row min-h-screen">
+        <Sidebar isSidebarOpen={isSidebarOpen} />
         <div className="flex-1 p-4 mb-2">
           <h1 className="text-2xl font-semibold mb-4">Dashboard</h1>
-
-          <div className="grid grid-cols-3 gap-4 mb-4">
+  
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
             <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
               <FaBox className="text-blue-500 text-3xl mr-4" />
               <div>
-                <h2 className="text-lg font-semibold">Total Produk</h2>
-                <p className="text-2xl font-bold">{totalProduk}</p>
+                <h2 className="md:text-lg font-semibold sm:text-xs">Total Produk</h2>
+                <p className="md:text-2xl font-bold sm:text-s">{totalProduk}</p>
               </div>
             </div>
             <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
               <FaFileInvoice className="text-green-500 text-3xl mr-4" />
               <div>
-                <h2 className="text-lg font-semibold">Jumlah Transaksi</h2>
-                <p className="text-2xl font-bold">{jumlahTransaksi}</p>
+                <h2 className="md:text-lg font-semibold sm:text-xs">Jumlah Transaksi</h2>
+                <p className="md:text-2xl font-bold sm:text-s">{jumlahTransaksi}</p>
               </div>
             </div>
             <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
               <FaMoneyBill className="text-green-700 text-3xl mr-4" />
               <div>
-                <h2 className="text-lg font-semibold">{totalPembelian > totalPenjualan ? "Total Aset" : "Keuntungan"}</h2>
-                <p className="text-2xl font-bold">{(keuntungan * -1).toLocaleString("id-ID", {
+                <h2 className="md:text-lg font-semibold sm:text-s">{totalPembelian > totalPenjualan ? "Total Aset" : "Keuntungan"}</h2>
+                <p className="md:text-2xl font-bold sm:text-xs">{(keuntungan * -1).toLocaleString("id-ID", {
                   style: "currency",
                   currency: "IDR",
                 })}</p>
@@ -115,8 +115,8 @@ export default function Home() {
             <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
               <FaMoneyBill className="text-green-500 text-3xl mr-4" />
               <div>
-                <h2 className="text-lg font-semibold">Pembelian</h2>
-                <p className="text-2xl font-bold">{totalPembelian.toLocaleString("id-ID", {
+                <h2 className="md:text-lg font-semibold sm:text-s">Pembelian</h2>
+                <p className="md:text-2xl font-bold sm:text-xs">{totalPembelian.toLocaleString("id-ID", {
                   style: "currency",
                   currency: "IDR",
                 })}</p>
@@ -125,20 +125,21 @@ export default function Home() {
             <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
               <FaDollarSign className="text-red-500 text-3xl mr-4" />
               <div>
-                <h2 className="text-lg font-semibold">Penjualan</h2>
-                <p className="text-2xl font-bold">{totalPenjualan.toLocaleString("id-ID", {
+                <h2 className="md:text-lg font-semibold sm:text-s">Penjualan</h2>
+                <p className="md:text-2xl font-bold sm:text-xs">{totalPenjualan.toLocaleString("id-ID", {
                   style: "currency",
                   currency: "IDR",
                 })}</p>
               </div>
             </div>
           </div>
-
-          <div className="w-2/3 h-2/3 mt-8 border rounded-md bg-gray-100 border-gray-200 shadow-md">
+  
+          <div className="md:w-2/3 h-fit mt-8 border rounded-md bg-gray-100 border-gray-200 shadow-md">
             <BarChart data={chartData} />
           </div>
         </div>
       </div>
     </div>
   );
+  
 }

@@ -2,9 +2,13 @@ import React from 'react';
 
 export default function Sidebar({ isSidebarOpen }: { isSidebarOpen: boolean }) {
     return (
-        <div className="flex">
-            <aside className={`flex flex-col ${isSidebarOpen ? 'w-64' : 'w-16'} transition-all duration-300`}>
-                <div className={`px-3 py-4 rounded h-full bg-gray-50 border-r-2`}>
+        <div className="relative flex">
+              <aside
+                    className={`fixed inset-t-4 left-0 transform min-h-screen ${
+                    isSidebarOpen ? 'translate-x-0 ' : '-translate-x-full md:w-16'
+                    } w-64  bg-gray-50 border-r-2 z-40 transition-transform duration-300 ease-in-out md:relative md:translate-x-0`}
+                >
+                    <div className="px-3 py-4 h-full">
                     <ul className="space-y-2">
                         <li>
                             <a href="/home"
