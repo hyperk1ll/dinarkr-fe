@@ -28,7 +28,22 @@ export default function TransaksiPage() {
     detail: [{ id_dinar: "", jumlah: "", harga_satuan: "" }],
   });
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const handleSidebarToggle = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   useEffect(() => {
+    // Detect screen size on component mount
+    const checkScreenSize = () => {
+      if (window.innerWidth < 768) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    checkScreenSize(); // Check screen size on mount
+    
     // Fetch dinar options from API
     const fetchDinarOptions = async () => {
       try {
@@ -134,9 +149,9 @@ export default function TransaksiPage() {
 
   return (
     <div className="w-full bg-white min-h-screen">
-      <Navbar />
+      <Navbar onSidebarToggle={handleSidebarToggle} />
       <div className="flex min-h-screen">
-        <Sidebar />
+      <Sidebar isSidebarOpen={isSidebarOpen} />
         <div className="flex-1 p-8">
           <h1 className="text-2xl font-bold mb-6">Form Transaksi</h1>
           <form onSubmit={handleFormSubmit}>
@@ -217,7 +232,7 @@ export default function TransaksiPage() {
                 <div className="mb-2">
                   <label className="block text-gray-700">Jumlah</label>
                   <input
-                    type="number"
+                    type="number" inputMode="numeric" pattern="[0-9]*"
                     name="jumlah"
                     className="mt-1 block w-full border p-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={detail.jumlah}
@@ -228,7 +243,7 @@ export default function TransaksiPage() {
                 <div className="mb-2">
                   <label className="block text-gray-700">Harga Satuan</label>
                   <input
-                    type="number"
+                    type="number" inputMode="numeric" pattern="[0-9]*"
                     name="hargaSatuan"
                     min={0}
                     minLength={6}
@@ -251,7 +266,7 @@ export default function TransaksiPage() {
               className="mb-4  text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
               onClick={addDetail}
             >
-              Add Produk
+              Tambah Produk
             </button>
             <button
               type="submit"

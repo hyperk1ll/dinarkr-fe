@@ -148,141 +148,154 @@ const formatDate = (dateStr: string | number | Date) => {
 };
 
 
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 mt-2 max-h-screen overflow-auto">
-        <h2 className="text-xl font-bold mb-4">Edit Transaksi</h2>
-        <form onSubmit={handleSubmit}>
+return (
+  <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+    <div className="bg-white sm:mt-5 p-4 sm:p-6 rounded-lg shadow-lg w-full sm:w-3/4 lg:w-1/2 max-h-screen sm:max-h-dvh overflow-auto">
+      <h2 className="text-lg sm:text-xl font-bold mb-4">Edit Transaksi</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block text-gray-700">Tipe Transaksi</label>
+          <select
+            name="tipe_transaksi"
+            value={formData.tipe_transaksi}
+            onChange={(e) => {
+              const tipeTransaksi = e.target.value;
+              setFormData({
+                ...formData,
+                tipe_transaksi: tipeTransaksi,
+                pembelian_dari: tipeTransaksi === "jual" || tipeTransaksi === "hadiah" ? "-" : formData.pembelian_dari,
+              });
+            }}
+            className="mt-1 block w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
+          >
+            <option value="" disabled>Pilih Tipe Transaksi</option>
+            <option value="jual">Jual</option>
+            <option value="beli">Beli</option>
+            <option value="hadiah">Hadiah</option>
+          </select>
+        </div>
+
+        {formData.tipe_transaksi === "beli" && (
           <div className="mb-4">
-            <label className="block text-gray-700">Tipe Transaksi</label>
+            <label className="block text-gray-700">Pembelian Dari</label>
             <select
-              name="tipe_transaksi"
-              value={formData.tipe_transaksi}
-              onChange={(e) => {
-                const tipeTransaksi = e.target.value;
-                setFormData({
-                  ...formData,
-                  tipe_transaksi: tipeTransaksi,
-                  pembelian_dari: tipeTransaksi === "jual" || tipeTransaksi === "hadiah" ? "-" : formData.pembelian_dari,
-                });
-              }}
+              name="pembelian_dari"
+              value={formData.pembelian_dari}
+              onChange={(e) => setFormData({ ...formData, pembelian_dari: e.target.value })}
               className="mt-1 block w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
             >
-              <option value="" disabled>Pilih Tipe Transaksi</option>
-              <option value="jual">Jual</option>
-              <option value="beli">Beli</option>
-              <option value="hadiah">Hadiah</option>
+              <option value="" disabled>Pilih Asal Pembelian</option>
+              <option value="web">Web</option>
+              <option value="buyback">Buyback</option>
             </select>
           </div>
-          {formData.tipe_transaksi === "beli" && (
-            <div className="mb-4">
-              <label className="block text-gray-700">Pembelian Dari</label>
-              <select
-                name="pembelian_dari"
-                value={formData.pembelian_dari}
-                onChange={(e) => setFormData({ ...formData, pembelian_dari: e.target.value })}
-                className="mt-1 block w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
-              >
-                <option value="" disabled>Pilih Asal Pembelian</option>
-                <option value="web">Web</option>
-                <option value="buyback">Buyback</option>
-              </select>
-            </div>
-          )}
+        )}
+
+        <div className="mb-4">
+          <label className="block text-gray-700">Tanggal Transaksi</label>
+          <input
+            type="datetime-local"
+            name="tanggal_transaksi"
+            value={formatDate(formData.tanggal_transaksi)}
+            onChange={handleChange}
+            className="mt-1 block w-full border rounded-md p-2 border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {((formData.tipe_transaksi === "jual" || formData.tipe_transaksi === "hadiah") || (formData.tipe_transaksi === "beli" && formData.pembelian_dari === "buyback")) && (
           <div className="mb-4">
-            <label className="block text-gray-700">Tanggal Transaksi</label>
+            <label className="block text-gray-700">{formData.tipe_transaksi === 'beli' ? 'Dibeli Dari' : formData.tipe_transaksi === 'jual' ? 'Dijual Kepada' : 'Didapat Dari'}</label>
             <input
-              type="datetime-local"
-              name="tanggal_transaksi"
-              value={formatDate(formData.tanggal_transaksi)}
+              type="text"
+              name="nama_pembeli"
+              className="mt-1 block w-full border p-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder={`${formData.tipe_transaksi === 'beli' ? 'Masukkan Nama Penjual' : formData.tipe_transaksi === 'jual' ? 'Masukkan Nama Pembeli' : ''}`}
+              value={formData.nama_pembeli}
               onChange={handleChange}
-              className="mt-1 block w-full border rounded-md p-2 border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          {((formData.tipe_transaksi === "jual" || formData.tipe_transaksi === "hadiah") || (formData.tipe_transaksi === "beli" && formData.pembelian_dari === "buyback")) && (
-            <div className="mb-4">
-              <label className="block text-gray-700">{formData.tipe_transaksi === 'beli' ? 'Dibeli Dari' : formData.tipe_transaksi === 'jual' ? 'Dijual Kepada' : 'Didapat Dari'}</label>
+        )}
+
+        {formData.detail && formData.detail.map((detail, index) => (
+          <div key={index} className="mb-4 border p-4 rounded-md">
+            <h2 className="text-base sm:text-lg font-semibold mb-2">Produk {index + 1}</h2>
+            <div className="mb-2">
+              <select
+                value={detail.id_dinar}
+                onChange={(e) => handleDetailChange(index, "id_dinar", e.target.value)}
+                className="mt-1 block w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
+              >
+                <option value="" disabled>Pilih Produk</option>
+                {dinarOptions.map((dinarOption) => (
+                  <option key={dinarOption.id} value={dinarOption.id}>{dinarOption.nama}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mb-2">
+              <label className="block text-gray-700">Jumlah</label>
               <input
-                type="text"
-                name="nama_pembeli"
-                className="mt-1 block w-full border p-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder={`${formData.tipe_transaksi === 'beli' ? 'Masukkan Nama Penjual' : formData.tipe_transaksi === 'jual' ? 'Masukkan Nama Pembeli' : ''}`}
-                value={formData.nama_pembeli}
-                onChange={handleChange}
+                type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                className="mt-1 block w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
+                placeholder="Masukkan Jumlah"
+                value={detail.jumlah}
+                onChange={(e) => handleDetailChange(index, "jumlah", e.target.value)}
               />
             </div>
-          )}
-          {formData.detail && formData.detail.map((detail: { id_dinar: string | number | readonly string[] | undefined; jumlah: string | number | readonly string[] | undefined; harga_satuan: string | number | readonly string[] | undefined; }, index: React.Key | null | undefined) => (
-            <div key={index} className="mb-4 border p-4 rounded-md">
-              <h2 className="text-lg font-semibold mb-2">Produk {Number(index ?? 0) + 1}</h2>
-              <div className="mb-2">
-                <select
-                  value={detail.id_dinar}
-                  onChange={(e) => handleDetailChange(index, "id_dinar", e.target.value)}
-                  className="mt-1 block w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
-                >
-                  <option value="" disabled>Pilih Produk</option>
-                  {dinarOptions.map((dinarOption) => (
-                    <option key={dinarOption.id} value={dinarOption.id}>{dinarOption.nama}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-2">
-              <label className="block text-gray-700">Jumlah</label>
-                <input
-                  type="number"
-                  className="mt-1 block w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
-                  placeholder="Masukkan Jumlah"
-                  value={detail.jumlah}
-                  onChange={(e) => handleDetailChange(index, "jumlah", e.target.value)}
-                />
-              </div>
-              <div className="mb-2">
+
+            <div className="mb-2">
               <label className="block text-gray-700">Harga Satuan</label>
-                <input
-                  type="number"
-                  className="mt-1 block w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
-                  placeholder="Masukkan Harga Satuan"
-                  value={detail.harga_satuan}
-                  onChange={(e) => handleDetailChange(index, "harga_satuan", e.target.value)}
-                />
-              </div>
-              <button
-                type="button"
-                className="mt-2 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                onClick={() => removeDetail(index)}
-              >
-                Hapus
-              </button>
+              <input
+                type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                className="mt-1 block w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
+                placeholder="Masukkan Harga Satuan"
+                value={detail.harga_satuan}
+                onChange={(e) => handleDetailChange(index, "harga_satuan", e.target.value)}
+              />
             </div>
-          ))}
-          <button
-            type="button"
-            className="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-            onClick={addDetail}
-          >
-            Tambah Produk
-          </button>
-          <div className="mt-4">
-            <button
-              type="submit"
-              className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-              onClick={handleSubmit}
-            >
-              Simpan
-            </button>
+
             <button
               type="button"
-              className="focus:outline-none text-white bg-gray-500 hover:bg-gray-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
-              onClick={onClose}
+              className="mt-2 focus:outline-none text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2"
+              onClick={() => removeDetail(index)}
             >
-              Cancel
+              Hapus
             </button>
           </div>
-        </form>
-      </div>
+        ))}
+
+        <button
+          type="button"
+          className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 sm:mt-0 mt-4"
+          onClick={addDetail}
+        >
+          Tambah Produk
+        </button>
+
+        <div className="mt-4 flex justify-start space-x-2">
+          <button
+            type="submit"
+            className="focus:outline-none text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2"
+          >
+            Simpan
+          </button>
+          <button
+            type="button"
+            className="focus:outline-none text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default EditTransaksi;

@@ -98,7 +98,7 @@ export default function Navbar({ onSidebarToggle }: { onSidebarToggle: () => voi
             aria-expanded="false"
             onClick={() => setDropdownOpen(!dropdownOpen)}
           >
-            <Image src="/avatar.png" className="w-8 h-8 rounded-full bg-gray-800" alt="User avatar" width={32} height={32} />
+            <Image src="/avatar.png" className="w-8 rounded-full bg-gray-800" alt="User avatar" width={32} height={32} />
             {/* Show name only on medium screens and up */}
             <span className="hidden md:inline-block  ml-2 text-white ">{user?.nama_user}</span>
           </button>

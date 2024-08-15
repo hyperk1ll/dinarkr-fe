@@ -22,6 +22,15 @@ export default function Home() {
   };
 
   useEffect(() => {
+    // Detect screen size on component mount
+    const checkScreenSize = () => {
+      if (window.innerWidth < 768) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    checkScreenSize(); // Check screen size on mount
+    
     async function fetchData() {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/transaksi/get-all-transaksi`);

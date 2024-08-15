@@ -30,6 +30,8 @@ export default function RiwayatTransaksiPage() {
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [selectedDelete, setSelectedDelete] = useState<Transaction | null>(null);
 
+
+
   const fetchTransactions = async () => {
     try {
       const response = await axios.get(
@@ -79,7 +81,22 @@ export default function RiwayatTransaksiPage() {
     }
   };
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const handleSidebarToggle = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   useEffect(() => {
+    // Detect screen size on component mount
+    const checkScreenSize = () => {
+      if (window.innerWidth < 768) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    checkScreenSize(); // Check screen size on mount
+
     fetchTransactions();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -185,14 +202,15 @@ export default function RiwayatTransaksiPage() {
 };
 
   return (
-    <div className="w-full bg-white">
-      <Navbar />
-      <div className="flex min-h-screen">
-        <Sidebar />
-        <div className="p-4 w-full">
+    <div className="w-full min-h-screen bg-white">
+    <Navbar onSidebarToggle={handleSidebarToggle} />
+    <div className="flex flex-col md:flex-row">
+      <Sidebar isSidebarOpen={isSidebarOpen} />
+      <div className="flex-grow p-4 overflow-x-auto">
           <h1 className="text-2xl font-bold mb-4">Riwayat Transaksi</h1>
+          <div className=" overflow-x-auto"> {/* relative  */}
           {transactions.length > 0 ? (
-            <div className="rounded-lg border border-gray-200 overflow-hidden">
+            <div className="rounded-lg border border-gray-200 overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 border">
                 <thead className="bg-gray-50">
                   <tr>
@@ -298,9 +316,10 @@ export default function RiwayatTransaksiPage() {
               </table>
             </div>
           ) : (
-            <p>No transactions found</p>
+            <p>Tidak ada transaksi ditemukan</p>
           )}
         </div>
+      </div>
       </div>
       <Detail_Modal isOpen={isModalOpen} onClose={closeModal} details={selectedDetails} />
       {isEditModalOpen && selectedTransaction && (
