@@ -4,7 +4,7 @@ export default function Sidebar({ isSidebarOpen }: { isSidebarOpen: boolean }) {
     return (
         <div className="relative flex">
               <aside
-                    className={`fixed inset-t-4 left-0 transform min-h-screen ${
+                    className={`absolute inset-t-4 left-0 transform min-h-screen ${
                     isSidebarOpen ? 'translate-x-0 ' : '-translate-x-full md:w-16'
                     } w-64  bg-gray-50 border-r-2 z-40 transition-transform duration-300 ease-in-out md:relative md:translate-x-0`}
                 >

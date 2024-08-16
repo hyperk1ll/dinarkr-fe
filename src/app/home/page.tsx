@@ -107,7 +107,7 @@ export default function Home() {
             <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
               <FaFileInvoice className="text-green-500 text-3xl mr-4" />
               <div>
-                <h2 className="md:text-lg font-semibold sm:text-xs">Jumlah Transaksi</h2>
+                <h2 className="md:text-lg font-semibold sm:text-xs">Jumlah Penjualan</h2>
                 <p className="md:text-2xl font-bold sm:text-s">{jumlahTransaksi}</p>
               </div>
             </div>
