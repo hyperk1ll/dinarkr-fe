@@ -170,7 +170,7 @@ export default function TransaksiPage() {
                   }}
               >
 
-                <option value="" className="text-gray-200" selected disabled>Pilih Tipe Transaksi</option>
+                <option value="" className="text-gray-200" disabled>Pilih Tipe Transaksi</option>
                 <option value="jual">Jual</option>
                 <option value="beli">Beli</option>
                 <option value="hadiah">Hadiah</option>
@@ -185,7 +185,7 @@ export default function TransaksiPage() {
                 onChange={(e) => setFormData({ ...formData, pembelian_dari: e.target.value })}
               >
 
-                <option value="" className="text-gray-200" selected disabled>Pilih Asal Pembelian</option>
+                <option value="" className="text-gray-200" disabled>Pilih Asal Pembelian</option>
                 <option value="web">Web</option>
                 <option value="buyback">Buyback</option>
               </select>
@@ -221,7 +221,7 @@ export default function TransaksiPage() {
                   onChange={(e) => handleInputChange(index, "id_dinar", e.target.value)}
                   className="mt-1 block w-full border p-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="" selected disabled>Pilih Produk</option>
+                  <option value="" disabled>Pilih Produk</option>
                   {dinarOptions.map((dinar) => (
                     <option key={dinar.id} value={dinar.id}>
                       {dinar.nama}
