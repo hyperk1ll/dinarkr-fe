@@ -94,10 +94,10 @@ export default function Login() {
               {isLoading ? 'Logging in...' : 'Login'}
             </button>
           </form>
-          <p className="mt-4 text-sm text-center text-gray-600">
+          {/* <p className="mt-4 text-sm text-center text-gray-600">
             Don&apos;t have an account?
             <a href="/register" className="text-blue-500 hover:underline"> Register</a>
-          </p>
+          </p> */}
         </div>
       </div>
     </div>
