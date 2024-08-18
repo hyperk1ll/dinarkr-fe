@@ -216,7 +216,7 @@ return (
           </div>
         )}
 
-        {formData.detail && formData.detail.map((detail, index) => (
+        {formData.detail && formData.detail.map((detail: { id_dinar: string | number | readonly string[] | undefined; jumlah: string | number | readonly string[] | undefined; harga_satuan: string | number | readonly string[] | undefined; }, index: number) => (
           <div key={index} className="mb-4 border p-4 rounded-md">
             <h2 className="text-base sm:text-lg font-semibold mb-2">Produk {index + 1}</h2>
             <div className="mb-2">

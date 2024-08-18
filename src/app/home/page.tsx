@@ -39,7 +39,7 @@ export default function Home() {
         const transactions = data.data;
 
         // Calculate the total purchases and sales
-        const totals = transactions.reduce((acc, transaction) => {
+        const totals = transactions.reduce((acc: { totalPembelian: number; totalProduk: any; totalPenjualan: number; totalTransaksi: number; }, transaction: { jumlah: number; harga_satuan: number; tipe_transaksi: string; }) => {
           const total = transaction.jumlah * transaction.harga_satuan;
           if (transaction.tipe_transaksi === 'beli') {
             acc.totalPembelian += total;

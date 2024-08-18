@@ -1,6 +1,12 @@
 import React from 'react';
 
-const DeleteModal = ({ isOpen, onClose, onConfirm }) => {
+type DeleteModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+};
+
+const DeleteModal = ({ isOpen, onClose, onConfirm }: DeleteModalProps) => {
   if (!isOpen) return null;
 
   return (

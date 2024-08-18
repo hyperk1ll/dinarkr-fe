@@ -75,7 +75,7 @@ export default function TransaksiPage() {
     }
   }, [formData.tipe_transaksi, formData.pembelian_dari]);
 
-  const handleInputChange = (index, field, value) => {
+  const handleInputChange = (index: number, field: string, value: string) => {
     const updatedDetails = formData.detail.map((detail, i) =>
       i === index ? { ...detail, [field]: value } : detail
     );
@@ -90,12 +90,12 @@ export default function TransaksiPage() {
     });
   };
 
-    const removeDetail = (index) => {
+    const removeDetail = (index: number) => {
         const updatedDetails = formData.detail.filter((_, i) => i !== index);
         setFormData({ ...formData, detail: updatedDetails });
     };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
     // check if all fields are filled
@@ -119,6 +119,7 @@ export default function TransaksiPage() {
         icon: 'error',
         confirmButtonText: 'OK',
       });
+      console.log(formData)
       return;
     }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function Detail_Modal({ isOpen, onClose, details }) {
+export default function Detail_Modal({ isOpen, onClose, details }: { isOpen: boolean; onClose: () => void; details: any[] }) {
   const [dinarData, setDinarData] = useState<{ id: number; nama: string }[]>([]);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function Detail_Modal({ isOpen, onClose, details }) {
     fetchDinarData();
   }, []);
 
-  const getDinarNameById = (id) => {
+  const getDinarNameById = (id: number) => {
     const dinar = dinarData.find((item) => item.id === id);
     return dinar ? dinar.nama : `Unknown ID ${id}`;
   };
@@ -35,7 +35,7 @@ export default function Detail_Modal({ isOpen, onClose, details }) {
         <h2 className="text-2xl font-semibold mb-4">Detail Transaksi</h2>
         <div className="border-t border-gray-300">
           <ul className="divide-y divide-gray-200">
-            {details.map((detail, index) => (
+            {details.map((detail: { id_dinar: number; jumlah: number; harga_satuan: { toLocaleString: (arg0: string, arg1: { style: string; currency: string; }) => string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; totalHarga: { toLocaleString: (arg0: string, arg1: { style: string; currency: string; }) => string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; }, index: number) => (
               <li key={index} className="py-4 flex items-start">
                 <div className="flex-1">
                   <p className="text-lg font-medium">{getDinarNameById(detail.id_dinar)}</p>

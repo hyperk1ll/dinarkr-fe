@@ -188,7 +188,7 @@ export default function TransaksiBeliPage() {
     // Mengurangi satu jam
     date.setHours(date.getHours());
 
-    const options = {
+    const options: Intl.DateTimeFormatOptions =  {
         day: '2-digit',
         month: '2-digit',
         year: '2-digit',
