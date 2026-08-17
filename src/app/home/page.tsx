@@ -80,70 +80,91 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="text-2xl font-semibold text-gray-700">
-          Loading...
+      <div className="flex items-center justify-center min-h-screen bg-emerald-950">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gold-500 to-gold-700 flex items-center justify-center animate-pulse shadow-lg shadow-gold-500/20">
+            <span className="text-emerald-950 font-extrabold text-lg">D</span>
+          </div>
+          <span className="text-sm font-medium text-emerald-300/60">Memuat dashboard...</span>
         </div>
       </div>
     );
   }
 
+  const statCards = [
+    {
+      icon: <FaBox className="text-xl" />,
+      label: "Total Produk",
+      value: totalProduk.toString(),
+      gradient: "from-emerald-700 to-emerald-800",
+      iconBg: "bg-emerald-600/30",
+      iconColor: "text-emerald-300",
+    },
+    {
+      icon: <FaFileInvoice className="text-xl" />,
+      label: "Jumlah Penjualan",
+      value: jumlahTransaksi.toString(),
+      gradient: "from-emerald-700 to-emerald-800",
+      iconBg: "bg-gold-500/20",
+      iconColor: "text-gold-400",
+    },
+    {
+      icon: <FaMoneyBill className="text-xl" />,
+      label: totalPembelian > totalPenjualan ? "Total Aset" : "Keuntungan",
+      value: (keuntungan * -1).toLocaleString("id-ID", { style: "currency", currency: "IDR" }),
+      gradient: "from-gold-700 to-gold-800",
+      iconBg: "bg-gold-500/20",
+      iconColor: "text-gold-300",
+    },
+    {
+      icon: <FaMoneyBill className="text-xl" />,
+      label: "Pembelian",
+      value: totalPembelian.toLocaleString("id-ID", { style: "currency", currency: "IDR" }),
+      gradient: "from-emerald-700 to-emerald-800",
+      iconBg: "bg-emerald-500/20",
+      iconColor: "text-emerald-300",
+    },
+    {
+      icon: <FaDollarSign className="text-xl" />,
+      label: "Penjualan",
+      value: totalPenjualan.toLocaleString("id-ID", { style: "currency", currency: "IDR" }),
+      gradient: "from-emerald-700 to-emerald-800",
+      iconBg: "bg-emerald-500/20",
+      iconColor: "text-emerald-300",
+    },
+  ];
+
   return (
-    <div className="w-full bg-white">
+    <div className="w-full min-h-screen bg-emerald-950">
       <Navbar onSidebarToggle={handleSidebarToggle} />
       <div className="flex flex-col md:flex-row min-h-screen">
         <Sidebar isSidebarOpen={isSidebarOpen} />
-        <div className="flex-1 p-4 mb-2">
-          <h1 className="text-2xl font-semibold mb-4">Dashboard</h1>
-  
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-            <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
-              <FaBox className="text-blue-500 text-3xl mr-4" />
-              <div>
-                <h2 className="md:text-lg font-semibold sm:text-xs">Total Produk</h2>
-                <p className="md:text-2xl font-bold sm:text-s">{totalProduk}</p>
-              </div>
-            </div>
-            <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
-              <FaFileInvoice className="text-green-500 text-3xl mr-4" />
-              <div>
-                <h2 className="md:text-lg font-semibold sm:text-xs">Jumlah Penjualan</h2>
-                <p className="md:text-2xl font-bold sm:text-s">{jumlahTransaksi}</p>
-              </div>
-            </div>
-            <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
-              <FaMoneyBill className="text-green-700 text-3xl mr-4" />
-              <div>
-                <h2 className="md:text-lg font-semibold sm:text-s">{totalPembelian > totalPenjualan ? "Total Aset" : "Keuntungan"}</h2>
-                <p className="md:text-2xl font-bold sm:text-xs">{(keuntungan * -1).toLocaleString("id-ID", {
-                  style: "currency",
-                  currency: "IDR",
-                })}</p>
-              </div>
-            </div>
-            <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
-              <FaMoneyBill className="text-green-500 text-3xl mr-4" />
-              <div>
-                <h2 className="md:text-lg font-semibold sm:text-s">Pembelian</h2>
-                <p className="md:text-2xl font-bold sm:text-xs">{totalPembelian.toLocaleString("id-ID", {
-                  style: "currency",
-                  currency: "IDR",
-                })}</p>
-              </div>
-            </div>
-            <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
-              <FaDollarSign className="text-red-500 text-3xl mr-4" />
-              <div>
-                <h2 className="md:text-lg font-semibold sm:text-s">Penjualan</h2>
-                <p className="md:text-2xl font-bold sm:text-xs">{totalPenjualan.toLocaleString("id-ID", {
-                  style: "currency",
-                  currency: "IDR",
-                })}</p>
-              </div>
-            </div>
+        <div className="flex-1 p-4 md:p-6">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+            <p className="text-sm text-emerald-400/60 mt-1">Ringkasan data transaksi dan produk Anda</p>
           </div>
   
-          <div className="md:w-2/3 h-fit mt-8 border rounded-md bg-gray-100 border-gray-200 shadow-md">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            {statCards.map((card, index) => (
+              <div
+                key={index}
+                className={`bg-gradient-to-br ${card.gradient} p-5 rounded-xl border border-emerald-600/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5`}
+              >
+                <div className="flex items-center gap-4">
+                  <div className={`w-11 h-11 rounded-xl ${card.iconBg} flex items-center justify-center ${card.iconColor}`}>
+                    {card.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-emerald-300/50 uppercase tracking-wider">{card.label}</p>
+                    <p className="text-lg font-bold text-white mt-0.5 truncate">{card.value}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+  
+          <div className="md:w-2/3 bg-emerald-900/50 rounded-xl border border-emerald-800/30 p-4 shadow-lg">
             <BarChart data={chartData} />
           </div>
         </div>

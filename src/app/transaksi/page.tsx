@@ -28,6 +28,8 @@ export default function TransaksiPage() {
     detail: [{ id_dinar: "", jumlah: "", harga_satuan: "" }],
   });
 
+  const [priceSuggestions, setPriceSuggestions] = useState<{[key: number]: {konsumen: number, buyback: number} | null}>({});
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const handleSidebarToggle = () => {
@@ -81,6 +83,38 @@ export default function TransaksiPage() {
     );
     setFormData({ ...formData, detail: updatedDetails });
   };
+
+  useEffect(() => {
+    const fetchPrices = async () => {
+      if (!formData.tanggal_transaksi) return;
+
+      const dateTime = formData.tanggal_transaksi; // format: "YYYY-MM-DDThh:mm"
+      const newSuggestions: {[key: number]: {konsumen: number, buyback: number} | null} = {};
+
+      for (let i = 0; i < formData.detail.length; i++) {
+        const detail = formData.detail[i];
+        if (detail.id_dinar) {
+          try {
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/produk/harga-by-date?id_dinar=${detail.id_dinar}&tanggal=${dateTime}`);
+            if (!res.data.error && res.data.data) {
+              newSuggestions[i] = {
+                konsumen: Number(res.data.data.harga_konsumen),
+                buyback: Number(res.data.data.harga_buyback)
+              };
+            } else {
+              newSuggestions[i] = null;
+            }
+          } catch (err) {
+            newSuggestions[i] = null;
+          }
+        }
+      }
+      setPriceSuggestions(newSuggestions);
+    };
+
+    fetchPrices();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData.tanggal_transaksi, formData.detail.map(d => d.id_dinar).join(",")]);
 
 
   const addDetail = () => {
@@ -146,136 +180,171 @@ export default function TransaksiPage() {
     }
   };
 
-
+  const inputClasses = "mt-1 block w-full bg-emerald-800/50 border border-emerald-700/50 text-white placeholder-emerald-500/50 rounded-xl p-2.5 focus:bg-emerald-800/70 focus:border-gold-500/50 transition-all text-sm";
+  const labelClasses = "block text-sm font-semibold text-emerald-200/80 mb-1";
 
   return (
-    <div className="w-full bg-white min-h-screen">
+    <div className="w-full min-h-screen bg-emerald-950">
       <Navbar onSidebarToggle={handleSidebarToggle} />
       <div className="flex min-h-screen">
       <Sidebar isSidebarOpen={isSidebarOpen} />
-        <div className="flex-1 p-8">
-          <h1 className="text-2xl font-bold mb-6">Form Transaksi</h1>
-          <form onSubmit={handleFormSubmit}>
-            <div className="mb-4">
-              <label className="block text-gray-700">Tipe Transaksi</label>
-              <select
-                className="mt-1 block w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
-                value={formData.tipe_transaksi}
-                onChange={(e) => {
-                    const tipeTransaksi = e.target.value;
-                    setFormData({
-                      ...formData,
-                      tipe_transaksi: tipeTransaksi,
-                      pembelian_dari: tipeTransaksi === "jual" || tipeTransaksi === "hadiah" ? "-" : formData.pembelian_dari,
-                    });
-                  }}
-              >
-
-                <option value="" className="text-gray-200" disabled>Pilih Tipe Transaksi</option>
-                <option value="jual">Jual</option>
-                <option value="beli">Beli</option>
-                <option value="hadiah">Hadiah</option>
-              </select>
-            </div>
-            {formData.tipe_transaksi === "beli" && (
-            <div className="mb-4">
-              <label className="block text-gray-700">Pembelian Dari</label>
-              <select
-                className="mt-1 block w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300 shadow-sm"
-                value={formData.pembelian_dari}
-                onChange={(e) => setFormData({ ...formData, pembelian_dari: e.target.value })}
-              >
-
-                <option value="" className="text-gray-200" disabled>Pilih Asal Pembelian</option>
-                <option value="web">Web</option>
-                <option value="buyback">Buyback</option>
-              </select>
-            </div>
-            )}
-            <div className="mb-4">
-              <label className="block text-gray-700 ">Tanggal Transaksi</label>
-              <input
-                type="datetime-local"
-                className="mt-1 block w-full border rounded-md p-2 border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={formData.tanggal_transaksi}
-                onChange={(e) => setFormData({ ...formData, tanggal_transaksi: e.target.value })}
-              />
-            </div>
-            {((formData.tipe_transaksi === "jual" || formData.tipe_transaksi === "hadiah") || (formData.tipe_transaksi === "beli" && formData.pembelian_dari === "buyback")) && (
+        <div className="flex-1 p-4 md:p-6">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-white">Form Transaksi</h1>
+            <p className="text-sm text-emerald-400/60 mt-1">Tambahkan transaksi baru</p>
+          </div>
+          
+          <div className="bg-emerald-900/50 rounded-xl border border-emerald-800/30 p-6 shadow-lg max-w-2xl">
+            <form onSubmit={handleFormSubmit}>
               <div className="mb-4">
-                <label className="block text-gray-700">{formData.tipe_transaksi === 'beli' ? 'Dibeli Dari' : formData.tipe_transaksi === 'jual' ? 'Dijual Kepada' : 'Didapat Dari'}</label>
+                <label className={labelClasses}>Tipe Transaksi</label>
+                <select
+                  className={inputClasses}
+                  value={formData.tipe_transaksi}
+                  onChange={(e) => {
+                      const tipeTransaksi = e.target.value;
+                      setFormData({
+                        ...formData,
+                        tipe_transaksi: tipeTransaksi,
+                        pembelian_dari: tipeTransaksi === "jual" || tipeTransaksi === "hadiah" ? "-" : formData.pembelian_dari,
+                      });
+                    }}
+                >
+                  <option value="" disabled>Pilih Tipe Transaksi</option>
+                  <option value="jual">Jual</option>
+                  <option value="beli">Beli</option>
+                  <option value="hadiah">Hadiah</option>
+                </select>
+              </div>
+              {formData.tipe_transaksi === "beli" && (
+              <div className="mb-4">
+                <label className={labelClasses}>Pembelian Dari</label>
+                <select
+                  className={inputClasses}
+                  value={formData.pembelian_dari}
+                  onChange={(e) => setFormData({ ...formData, pembelian_dari: e.target.value })}
+                >
+                  <option value="" disabled>Pilih Asal Pembelian</option>
+                  <option value="web">Web</option>
+                  <option value="buyback">Buyback</option>
+                </select>
+              </div>
+              )}
+              <div className="mb-4">
+                <label className={labelClasses}>Tanggal Transaksi</label>
                 <input
-                  type="text"
-                  className="mt-1 block w-full border p-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder={`${formData.tipe_transaksi === 'beli' ? 'Masukkan Nama Penjual' : formData.tipe_transaksi === 'jual' ? 'Masukkan Nama Pembeli' : ''}`}
-                  value={formData.nama_pembeli}
-                  onChange={(e) => setFormData({ ...formData, nama_pembeli: e.target.value })}
+                  type="datetime-local"
+                  className={inputClasses}
+                  value={formData.tanggal_transaksi}
+                  onChange={(e) => setFormData({ ...formData, tanggal_transaksi: e.target.value })}
                 />
               </div>
-            )}
-            {formData.detail.map((detail, index) => (
-              <div key={index} className="mb-4 border p-4 rounded-md">
-                <h2 className="text-lg font-semibold mb-2">Produk {index + 1}</h2>
-                <div className="mb-2 rounded-md">
-                <select
-                  value={detail.id_dinar}
-                  onChange={(e) => handleInputChange(index, "id_dinar", e.target.value)}
-                  className="mt-1 block w-full border p-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="" disabled>Pilih Produk</option>
-                  {dinarOptions.map((dinar) => (
-                    <option key={dinar.id} value={dinar.id}>
-                      {dinar.nama}
-                    </option>
-                  ))}
-                </select>
-                </div>
-                <div className="mb-2">
-                  <label className="block text-gray-700">Jumlah</label>
+              {((formData.tipe_transaksi === "jual" || formData.tipe_transaksi === "hadiah") || (formData.tipe_transaksi === "beli" && formData.pembelian_dari === "buyback")) && (
+                <div className="mb-4">
+                  <label className={labelClasses}>{formData.tipe_transaksi === 'beli' ? 'Dibeli Dari' : formData.tipe_transaksi === 'jual' ? 'Dijual Kepada' : 'Didapat Dari'}</label>
                   <input
-                    type="number" inputMode="numeric" pattern="[0-9]*"
-                    name="jumlah"
-                    className="mt-1 block w-full border p-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={detail.jumlah}
-                    min={0}
-                    onChange={(e) => handleInputChange(index, "jumlah", e.target.value)}
+                    type="text"
+                    className={inputClasses}
+                    placeholder={`${formData.tipe_transaksi === 'beli' ? 'Masukkan Nama Penjual' : formData.tipe_transaksi === 'jual' ? 'Masukkan Nama Pembeli' : ''}`}
+                    value={formData.nama_pembeli}
+                    onChange={(e) => setFormData({ ...formData, nama_pembeli: e.target.value })}
                   />
                 </div>
-                <div className="mb-2">
-                  <label className="block text-gray-700">Harga Satuan</label>
-                  <input
-                    type="number" inputMode="numeric" pattern="[0-9]*"
-                    name="hargaSatuan"
-                    min={0}
-                    minLength={6}
-                    className="mt-1 block w-full border p-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={detail.harga_satuan}
-                    onChange={(e) => handleInputChange(index, "harga_satuan", e.target.value)}
-                  />
+              )}
+              {formData.detail.map((detail, index) => (
+                <div key={index} className="mb-4 border border-emerald-700/30 p-4 rounded-xl bg-emerald-800/20">
+                  <h2 className="text-sm font-semibold text-gold-400 mb-3">Produk {index + 1}</h2>
+                  <div className="mb-3">
+                    <select
+                      value={detail.id_dinar}
+                      onChange={(e) => handleInputChange(index, "id_dinar", e.target.value)}
+                      className={inputClasses}
+                    >
+                      <option value="" disabled>Pilih Produk</option>
+                      {dinarOptions.map((dinar) => (
+                        <option key={dinar.id} value={dinar.id}>
+                          {dinar.nama}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className={labelClasses}>Jumlah</label>
+                      <input
+                        type="number" inputMode="numeric" pattern="[0-9]*"
+                        name="jumlah"
+                        className={inputClasses}
+                        value={detail.jumlah}
+                        min={0}
+                        placeholder="0"
+                        onChange={(e) => handleInputChange(index, "jumlah", e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className={labelClasses}>Harga Satuan</label>
+                      <input
+                        type="number" inputMode="numeric" pattern="[0-9]*"
+                        name="hargaSatuan"
+                        min={0}
+                        minLength={6}
+                        className={inputClasses}
+                        value={detail.harga_satuan}
+                        placeholder="0"
+                        onChange={(e) => handleInputChange(index, "harga_satuan", e.target.value)}
+                      />
+                      {priceSuggestions[index] && (
+                        <div className="mt-2 flex flex-col gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => handleInputChange(index, "harga_satuan", priceSuggestions[index]!.konsumen.toString())}
+                            className="text-left px-2 py-1.5 text-[11px] font-medium rounded-md bg-gold-500/10 text-gold-400 border border-gold-500/20 hover:bg-gold-500/20 transition-colors"
+                          >
+                            <span className="opacity-70">Konsumen:</span> {priceSuggestions[index]!.konsumen.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleInputChange(index, "harga_satuan", priceSuggestions[index]!.buyback.toString())}
+                            className="text-left px-2 py-1.5 text-[11px] font-medium rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+                          >
+                            <span className="opacity-70">Buyback:</span> {priceSuggestions[index]!.buyback.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="mt-3 text-red-400 hover:text-red-300 text-xs font-medium flex items-center gap-1 transition-colors"
+                    onClick={() => removeDetail(index)}
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                    Hapus
+                  </button>
                 </div>
+              ))}
+              <div className="flex flex-wrap gap-3 mt-4">
                 <button
                   type="button"
-                  className="mt-2 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                  onClick={() => removeDetail(index)}
+                  className="text-gold-400 hover:text-gold-300 border border-gold-500/30 hover:border-gold-500/50 bg-gold-500/5 hover:bg-gold-500/10 font-medium rounded-xl text-sm px-4 py-2.5 transition-all flex items-center gap-2"
+                  onClick={addDetail}
                 >
-                  Hapus
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                  </svg>
+                  Tambah Produk
+                </button>
+                <button
+                  type="submit"
+                  className="bg-gradient-to-r from-gold-500 to-gold-600 text-emerald-950 font-semibold rounded-xl text-sm px-6 py-2.5 hover:from-gold-400 hover:to-gold-500 transition-all shadow-lg shadow-gold-500/20"
+                >
+                  Submit
                 </button>
               </div>
-            ))}
-            <button
-              type="button"
-              className="mb-4  text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-              onClick={addDetail}
-            >
-              Tambah Produk
-            </button>
-            <button
-              type="submit"
-              className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-            >
-              Submit
-            </button>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>

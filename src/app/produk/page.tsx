@@ -5,6 +5,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 interface Produk {
   id: number;
@@ -21,6 +22,7 @@ export default function ProdukPage() {
   const [produk, setProduk] = useState<Produk[]>([]);
   const [showImages, setShowImages] = useState<Set<number>>(new Set());
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -66,68 +68,111 @@ export default function ProdukPage() {
     });
   };
 
+  const handleSyncHarga = async () => {
+    setIsSyncing(true);
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/produk/sync-harga`
+      );
+      if (!response.data.error) {
+        Swal.fire({
+          title: "Berhasil",
+          text: "Harga berhasil disinkronisasi dari dinarkr.com",
+          icon: "success",
+          confirmButtonText: "Oke",
+          confirmButtonColor: "#10b981",
+        });
+        // Fetch ulang data setelah sync
+        const newResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/produk/get-dinar`
+        );
+        const sortedData = newResponse.data.data.sort(
+          (a: Produk, b: Produk) => a.id - b.id
+        );
+        setProduk(sortedData);
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Gagal",
+        text: "Terjadi kesalahan saat menyinkronisasi harga",
+        icon: "error",
+        confirmButtonText: "Oke",
+      });
+      console.error(error);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   return  (
-    <div className="w-full min-h-screen bg-white">
+    <div className="w-full min-h-screen bg-emerald-950">
       <Navbar onSidebarToggle={handleSidebarToggle} />
       <div className="flex flex-col md:flex-row">
         <Sidebar isSidebarOpen={isSidebarOpen} />
-        <div className="flex-grow p-4 overflow-x-auto">
-          <h1 className="text-2xl font-bold mb-4">Daftar Produk</h1>
-          <div className=" overflow-x-auto"> {/* relative  */}
-            <div className="rounded-lg border border-gray-200 overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 border">
-                <thead className="bg-gray-100 border-separate">
+        <div className="flex-grow p-4 md:p-6 overflow-x-auto">
+          <div className="mb-6 flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold text-white">Daftar Produk</h1>
+              <p className="text-sm text-emerald-400/60 mt-1">Katalog lengkap produk dinar</p>
+            </div>
+            <div className="flex flex-col items-end gap-2">
+              {produk.length > 0 && produk[0].terakhir_diperbarui && (
+                <div className="text-xs text-emerald-400/80 font-medium bg-emerald-900/40 px-3 py-1.5 rounded-lg border border-emerald-800/50">
+                  Update Terakhir: {new Date(produk[0].terakhir_diperbarui).toLocaleString('id-ID', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  }).replace('.', ':')} WIB
+                </div>
+              )}
+              <button 
+                onClick={handleSyncHarga}
+                disabled={isSyncing}
+                className="bg-gold-500 text-emerald-950 font-bold py-2 px-4 rounded-xl hover:bg-gold-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                {isSyncing ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-emerald-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Menyinkronisasi...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    Sync Harga (Dinarkr.com)
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+          <div className="overflow-x-auto">
+            <div className="rounded-xl border border-emerald-800/50 overflow-hidden shadow-lg">
+              <table className="min-w-full">
+                <thead className="bg-emerald-900/80 border-b border-emerald-700/30">
                   <tr>
-                    <th
-                      scope="col"
-                      className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
-                    >
-                      No
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
-                    >
-                      Gambar
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
-                    >
-                      Nama
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
-                    >
-                      Harga Konsumen
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
-                    >
-                      Harga Buyback
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
-                    >
-                      Jumlah Stok
-                    </th>
+                    {['No', 'Gambar', 'Nama', 'Harga Konsumen', 'Harga Buyback', 'Jumlah Stok'].map((header) => (
+                      <th key={header} scope="col" className="px-4 py-3.5 text-left text-[11px] font-bold text-emerald-300/50 uppercase tracking-wider">
+                        {header}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
-                <tbody className="justify-items-center">
+                <tbody className="divide-y divide-emerald-800/30">
                   {produk.map((item, index) => (
-                    <tr key={item.id}>
-                      <td className="px-4 py-4 border-b whitespace-nowrap text-sm font-medium text-gray-900">
+                    <tr key={item.id} className="hover:bg-emerald-800/20 transition-colors">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-emerald-200">
                         {index + 1}
                       </td>
-                      <td className="px-2 py-4 border-b whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-2 py-4 whitespace-nowrap text-sm">
                         {showImages.has(item.id) && item.gambar && item.gambar.trim() ? (
                           <Image
                             src={item.gambar}
                             alt={item.nama}
-                            className="object-center"
+                            className="object-center rounded-lg"
                             quality={100}
                             width={225}
                             height={225}
@@ -137,30 +182,32 @@ export default function ProdukPage() {
                         )}
                         <button
                           onClick={() => toggleImageVisibility(item.id)}
-                          className="bg-blue-500 whitespace-nowrap text-sm text-white px-4 py-2 rounded mt-2 align-middle"
+                          className="text-xs font-medium text-gold-400 hover:text-gold-300 border border-gold-500/30 hover:border-gold-500/50 bg-gold-500/5 hover:bg-gold-500/10 px-3 py-1.5 rounded-lg mt-2 transition-all"
                         >
                           {showImages.has(item.id)
                             ? "Sembunyikan"
                             : "Lihat Gambar"}
                         </button>
                       </td>
-                      <td className="px-4 py-4 border-b whitespace-nowrap text-gray-900">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm font-semibold text-white">
                         {item.nama}
                       </td>
-                      <td className="px-4 py-4 border-b whitespace-nowrap text-gray-900">
-                        {item.harga_konsumen.toLocaleString("id-ID", {
-                  style: "currency",
-                  currency: "IDR",
-                })}
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-emerald-200">
+                        {Number(item.harga_konsumen).toLocaleString("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                        })}
                       </td>
-                      <td className="px-4 py-4 border-b whitespace-nowrap text-gray-900">
-                        {item.harga_buyback.toLocaleString("id-ID", {
-                  style: "currency",
-                  currency: "IDR",
-                })}
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-emerald-200">
+                        {Number(item.harga_buyback).toLocaleString("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                        })}
                       </td>
-                      <td className="px-4 py-4 border-b whitespace-nowrap text-gray-900">
-                        {item.jumlah_stok}
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-gold-500/10 text-gold-400 border border-gold-500/20">
+                          {item.jumlah_stok}
+                        </span>
                       </td>
                     </tr>
                   ))}

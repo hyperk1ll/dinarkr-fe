@@ -2,6 +2,75 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Hijau Botol / Islami */
+  --green-950: #0a2118;
+  --green-900: #0f3524;
+  --green-800: #18603e;
+  --green-700: #1f7a50;
+  --green-600: #27965f;
+  --green-500: #30b06e;
+  --green-400: #4dc98a;
+  --green-300: #7ddba8;
+  --green-200: #b0ecc9;
+  --green-100: #d9f7e4;
+  --green-50: #edfbf2;
+
+  /* Kuning Keemasan */
+  --gold-900: #5c4508;
+  --gold-800: #7a5c0a;
+  --gold-700: #a17a0d;
+  --gold-600: #c99910;
+  --gold-500: #d4a817;
+  --gold-400: #e6c040;
+  --gold-300: #f0d46e;
+  --gold-200: #f7e6a0;
+  --gold-100: #fbf0cc;
+  --gold-50: #fdf8e8;
+}
+
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #27965f;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #1f7a50;
+}
+
+/* Selection color */
+::selection {
+  background-color: #e6c040;
+  color: #0a2118;
+}
+
+/* Smooth transitions for interactive elements */
+button, a, input, select, textarea {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Focus ring style */
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(214, 168, 23, 0.3);
+  border-color: #d4a817 !important;
 }

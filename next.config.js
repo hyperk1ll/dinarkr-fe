@@ -1,6 +1,6 @@
 // next.config.js
 module.exports = {
-    images: {
-      domains: ['drive.google.com'],
-    },
-  };
+  images: {
+    domains: ['drive.google.com', 'dinarkr.com'],
+  },
+};

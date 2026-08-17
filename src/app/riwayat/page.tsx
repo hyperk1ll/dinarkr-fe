@@ -88,15 +88,12 @@ export default function RiwayatTransaksiPage() {
   };
 
   useEffect(() => {
-    // Detect screen size on component mount
     const checkScreenSize = () => {
       if (window.innerWidth < 768) {
         setIsSidebarOpen(false);
       }
     };
-
-    checkScreenSize(); // Check screen size on mount
-
+    checkScreenSize();
     fetchTransactions();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -111,20 +108,9 @@ export default function RiwayatTransaksiPage() {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedDetails([]);
-  };
-
-  const closeEditModal = () => {
-    setIsEditModalOpen(false);
-    setSelectedTransaction(null);
-  };
-
-  const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false);
-    setSelectedDelete(null);
-  };
+  const closeModal = () => { setIsModalOpen(false); setSelectedDetails([]); };
+  const closeEditModal = () => { setIsEditModalOpen(false); setSelectedTransaction(null); };
+  const closeDeleteModal = () => { setIsDeleteModalOpen(false); setSelectedDelete(null); };
 
   const handleEditSubmit = async (updatedTransaction: Transaction) => {
     try {
@@ -133,17 +119,9 @@ export default function RiwayatTransaksiPage() {
         updatedTransaction
       );
       if (!response.data.error) {
-        // Refetch transactions after a successful update
         await fetchTransactions();
-
         closeEditModal();
-
-        Swal.fire({
-          title: 'Sukses',
-          text: 'Data transaksi berhasil diubah',
-          icon: 'success',
-          confirmButtonText: 'Oke',
-        });
+        Swal.fire({ title: 'Sukses', text: 'Data transaksi berhasil diubah', icon: 'success', confirmButtonText: 'Oke' });
       }
     } catch (error) {
       console.error("Error updating transaction:", error);
@@ -162,19 +140,9 @@ export default function RiwayatTransaksiPage() {
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/transaksi/delete-transaksi/${selectedDelete.id_transaksi}`
         );
         if (!response.data.error) {
-          setTransactions(
-            transactions.filter(
-              (t) => t.id_transaksi !== selectedDelete.id_transaksi
-            )
-          );
+          setTransactions(transactions.filter((t) => t.id_transaksi !== selectedDelete.id_transaksi));
           closeDeleteModal();
-
-          Swal.fire({
-            title: 'Sukses',
-            text: 'Data transaksi berhasil dihapus',
-            icon: 'success',
-            confirmButtonText: 'Oke',
-          });
+          Swal.fire({ title: 'Sukses', text: 'Data transaksi berhasil dihapus', icon: 'success', confirmButtonText: 'Oke' });
         }
       } catch (error) {
         console.error("Error deleting transaction:", error);
@@ -184,131 +152,76 @@ export default function RiwayatTransaksiPage() {
 
   const formatDate = (dateStr: string | number | Date) => {
     const date = new Date(dateStr);
-
-    // Mengurangi satu jam
     date.setHours(date.getHours());
-
-    const options: Intl.DateTimeFormatOptions = {
-        day: '2-digit',
-        month: '2-digit',
-        year: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false,
-    };
-    
+    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
     return date.toLocaleString('en-GB', options).replace(',', '');
-};
+  };
+
+  const getTipeBadge = (tipe: string) => {
+    const styles: Record<string, string> = {
+      jual: 'bg-gold-500/10 text-gold-400 border-gold-500/20',
+      beli: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+      hadiah: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+    };
+    const labels: Record<string, string> = { jual: 'Jual', beli: 'Beli', hadiah: 'Hadiah' };
+    return <span className={`inline-flex px-2.5 py-1 rounded-lg text-xs font-bold border ${styles[tipe] || ''}`}>{labels[tipe] || tipe}</span>;
+  };
 
   return (
-    <div className="w-full min-h-screen bg-white">
+    <div className="w-full min-h-screen bg-emerald-950">
     <Navbar onSidebarToggle={handleSidebarToggle} />
     <div className="flex flex-col md:flex-row">
       <Sidebar isSidebarOpen={isSidebarOpen} />
-      <div className="flex-grow p-4 overflow-x-auto">
-          <h1 className="text-2xl font-bold mb-4">Riwayat Transaksi</h1>
-          <div className=" overflow-x-auto"> {/* relative  */}
+      <div className="flex-grow p-4 md:p-6 overflow-x-auto">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-white">Riwayat Transaksi</h1>
+            <p className="text-sm text-emerald-400/60 mt-1">Semua riwayat transaksi dinar</p>
+          </div>
+          <div className="overflow-x-auto">
           {transactions.length > 0 ? (
-            <div className="rounded-lg border border-gray-200 overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 border">
-                <thead className="bg-gray-50">
+            <div className="rounded-xl border border-emerald-800/50 overflow-hidden shadow-lg">
+              <table className="min-w-full">
+                <thead className="bg-emerald-900/80 border-b border-emerald-700/30">
                   <tr>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
-                    >
-                      No
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
-                    >
-                      Tipe Transaksi
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
-                    >
-                      Pembelian Dari
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
-                    >
-                      Tanggal Transaksi
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
-                    >
-                      Nama Pembeli
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
-                    >
-                      Total Harga
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider text-center"
-                    >
-                      Aksi
-                    </th>
+                    {['No', 'Tipe', 'Dari', 'Tanggal', 'Nama', 'Total Harga', 'Aksi'].map((h) => (
+                      <th key={h} scope="col" className="px-4 py-3.5 text-left text-[11px] font-bold text-emerald-300/50 uppercase tracking-wider">{h}</th>
+                    ))}
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-emerald-800/30">
                   {transactions.map((transaction, index) => (
-                    <tr key={transaction.id_transaksi}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {index + 1}
+                    <tr key={transaction.id_transaksi} className="hover:bg-emerald-800/20 transition-colors">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-emerald-200">{index + 1}</td>
+                      <td className="px-4 py-4 whitespace-nowrap">{getTipeBadge(transaction.tipe_transaksi)}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-emerald-300/70">
+                        {transaction.pembelian_dari === "web" ? "Web" : transaction.pembelian_dari === "buyback" ? "Buyback" : "-"}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {transaction.tipe_transaksi === "jual"
-                          ? "Jual"
-                          : transaction.tipe_transaksi === "beli"
-                          ? "Beli"
-                          : "Hadiah"}
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-emerald-300/70">{formatDate(transaction.tanggal_transaksi)}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-emerald-200">{transaction.nama_pembeli}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm font-semibold text-gold-400">
+                        {Number(transaction.totalHarga).toLocaleString("id-ID", { style: "currency", currency: "IDR" })}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {transaction.pembelian_dari === "web"
-                          ? "Web"
-                          : transaction.pembelian_dari === "buyback"
-                          ? "Buyback"
-                          : "-"}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                       {formatDate(transaction.tanggal_transaksi)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {transaction.nama_pembeli}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {transaction.totalHarga.toLocaleString("id-ID", {
-                          style: "currency",
-                          currency: "IDR",
-                        })}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <button
-                          className="bg-blue-500 text-white px-4 py-2 rounded mr-2 align-middle"
-                          onClick={() => handleDetailClick(transaction.details)}
-                        >
-                          Lihat Detail
-                        </button>
-                        <button
-                          className="bg-green-500 text-white px-4 py-2 rounded mr-2 align-middle"
-                          onClick={() => handleEdit(transaction)}
-                        >
-                          <FaEdit size={20} height={10} /> {/* Edit icon */}
-                        </button>
-                        <button
-                          className="bg-red-500 text-white px-4 py-2 rounded align-middle"
-                          onClick={() => handleDeleteClick(transaction)}
-                        >
-                          <FaTrash size={20} /> {/* Delete icon */}
-                        </button>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <button
+                            className="text-xs font-medium text-gold-400 hover:text-gold-300 border border-gold-500/30 hover:border-gold-500/50 bg-gold-500/5 hover:bg-gold-500/10 px-3 py-1.5 rounded-lg transition-all"
+                            onClick={() => handleDetailClick(transaction.details)}
+                          >
+                            Detail
+                          </button>
+                          <button
+                            className="p-1.5 rounded-lg text-emerald-400 hover:text-emerald-300 hover:bg-emerald-800/50 transition-all"
+                            onClick={() => handleEdit(transaction)}
+                          >
+                            <FaEdit size={14} />
+                          </button>
+                          <button
+                            className="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all"
+                            onClick={() => handleDeleteClick(transaction)}
+                          >
+                            <FaTrash size={14} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -316,25 +229,24 @@ export default function RiwayatTransaksiPage() {
               </table>
             </div>
           ) : (
-            <p>Tidak ada transaksi ditemukan</p>
+            <div className="text-center py-12">
+              <div className="w-16 h-16 rounded-full bg-emerald-800/30 flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-emerald-500/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+              </div>
+              <p className="text-emerald-400/60 font-medium">Tidak ada transaksi ditemukan</p>
+            </div>
           )}
         </div>
       </div>
       </div>
       <Detail_Modal isOpen={isModalOpen} onClose={closeModal} details={selectedDetails} />
       {isEditModalOpen && selectedTransaction && (
-        <Edit_Transaksi
-          transaksi={selectedTransaction}
-          onClose={closeEditModal}
-          onSubmit={handleEditSubmit}
-        />
+        <Edit_Transaksi transaksi={selectedTransaction} onClose={closeEditModal} onSubmit={handleEditSubmit} />
       )}
       {selectedDelete && (
-        <Delete_Modal
-          isOpen={isDeleteModalOpen}
-          onClose={closeDeleteModal}
-          onConfirm={handleDeleteConfirm}
-        />
+        <Delete_Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={handleDeleteConfirm} />
       )}
     </div>
   );
