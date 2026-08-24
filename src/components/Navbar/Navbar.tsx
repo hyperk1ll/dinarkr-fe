@@ -76,7 +76,7 @@ export default function Navbar({ onSidebarToggle }: { onSidebarToggle: () => voi
 
   return (
     <nav className="bg-gradient-to-r from-emerald-900 via-emerald-900 to-emerald-800 border-b border-emerald-700/30 shadow-lg shadow-emerald-950/50 sticky top-0 z-50">
-      <div className="flex items-center justify-between px-4 py-3 mx-auto max-w-screen-2xl">
+      <div className="flex items-center justify-between px-4 py-3 w-full">
         <div className="flex items-center justify-start w-full md:w-auto">
           {/* Toggle Sidebar Button */}
           <button
