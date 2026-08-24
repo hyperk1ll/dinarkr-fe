@@ -75,8 +75,8 @@ export default function Login() {
                 <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM8 12V8l4 2-4 2z"/>
               </svg>
             </div>
-            <h1 className="text-xl font-bold text-white">Selamat Datang</h1>
-            <p className="text-emerald-300/60 text-sm mt-1">Masukkan kredensial untuk melanjutkan</p>
+            <h1 className="text-xl font-bold text-emerald-950">Selamat Datang</h1>
+            <p className="text-emerald-700/80 text-sm mt-1">Masukkan kredensial untuk melanjutkan</p>
           </div>
           
           <form onSubmit={handleLogin} className="space-y-5">
@@ -88,7 +88,7 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 type="text"
                 placeholder="nama@email.com"
-                className="px-4 py-3 bg-emerald-800/50 border border-emerald-700/50 text-white placeholder-emerald-500/50 rounded-xl focus:bg-emerald-800/70 focus:border-gold-500/50 transition-all"
+                className="px-4 py-3 bg-emerald-50 border border-emerald-200 text-emerald-950 placeholder-emerald-500/50 rounded-xl focus:bg-emerald-800/70 focus:border-gold-500/50 transition-all"
                 required
               />
             </div>
@@ -100,7 +100,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
                 placeholder="••••••••"
-                className="px-4 py-3 bg-emerald-800/50 border border-emerald-700/50 text-white placeholder-emerald-500/50 rounded-xl focus:bg-emerald-800/70 focus:border-gold-500/50 transition-all"
+                className="px-4 py-3 bg-emerald-50 border border-emerald-200 text-emerald-950 placeholder-emerald-500/50 rounded-xl focus:bg-emerald-800/70 focus:border-gold-500/50 transition-all"
                 required
               />
             </div>

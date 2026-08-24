@@ -94,23 +94,23 @@ export default function GrafikHargaPage() {
   }, [selectedDinar]);
 
   return (
-    <div className="w-full min-h-screen bg-emerald-950">
+    <div className="w-full min-h-screen bg-gray-50">
       <Navbar onSidebarToggle={handleSidebarToggle} />
       <div className="flex flex-col md:flex-row min-h-screen">
         <Sidebar isSidebarOpen={isSidebarOpen} />
         <div className="flex-grow p-4 md:p-6 overflow-x-auto">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-white">Grafik Harga Pasar</h1>
-            <p className="text-sm text-emerald-400/60 mt-1">Pantau pergerakan harga dinar dari hari ke hari</p>
+            <h1 className="text-2xl font-bold text-emerald-950">Grafik Harga Pasar</h1>
+            <p className="text-sm text-emerald-700/80 mt-1">Pantau pergerakan harga dinar dari hari ke hari</p>
           </div>
           
-          <div className="bg-emerald-900/50 rounded-xl border border-emerald-800/30 p-6 shadow-lg mb-6">
+          <div className="bg-white rounded-xl border border-emerald-200 p-6 shadow-lg mb-6">
             <div className="mb-6 max-w-sm">
-              <label className="block text-sm font-medium text-emerald-300/80 mb-2">
+              <label className="block text-sm font-medium text-emerald-700/80 mb-2">
                 Pilih Produk Dinar
               </label>
               <select
-                className="w-full bg-emerald-950 border border-emerald-700/50 text-white rounded-lg p-2.5 focus:ring-gold-500 focus:border-gold-500"
+                className="w-full bg-gray-50 border border-emerald-200 text-emerald-950 rounded-lg p-2.5 focus:ring-gold-500 focus:border-gold-500"
                 value={selectedDinar}
                 onChange={(e) => setSelectedDinar(e.target.value)}
               >
@@ -124,19 +124,19 @@ export default function GrafikHargaPage() {
 
             <div className="h-[400px] w-full relative">
               {isLoading ? (
-                <div className="absolute inset-0 flex items-center justify-center bg-emerald-950/20 backdrop-blur-sm rounded-lg z-10">
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-50/20 backdrop-blur-sm rounded-lg z-10">
                   <div className="flex flex-col items-center gap-3">
                     <svg className="animate-spin h-8 w-8 text-gold-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span className="text-emerald-300 font-medium text-sm">Memuat grafik...</span>
+                    <span className="text-emerald-700 font-medium text-sm">Memuat grafik...</span>
                   </div>
                 </div>
               ) : chartData && chartData.labels.length > 0 ? (
                 <LineChart data={chartData} />
               ) : (
-                <div className="flex h-full items-center justify-center text-emerald-400/60">
+                <div className="flex h-full items-center justify-center text-emerald-700/80">
                   Belum ada riwayat data harga untuk produk ini.
                 </div>
               )}

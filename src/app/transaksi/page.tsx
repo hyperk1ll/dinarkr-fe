@@ -180,21 +180,21 @@ export default function TransaksiPage() {
     }
   };
 
-  const inputClasses = "mt-1 block w-full bg-emerald-800/50 border border-emerald-700/50 text-white placeholder-emerald-500/50 rounded-xl p-2.5 focus:bg-emerald-800/70 focus:border-gold-500/50 transition-all text-sm";
+  const inputClasses = "mt-1 block w-full bg-emerald-50 border border-emerald-200 text-emerald-950 placeholder-emerald-500/50 rounded-xl p-2.5 focus:bg-emerald-800/70 focus:border-gold-500/50 transition-all text-sm";
   const labelClasses = "block text-sm font-semibold text-emerald-200/80 mb-1";
 
   return (
-    <div className="w-full min-h-screen bg-emerald-950">
+    <div className="w-full min-h-screen bg-gray-50">
       <Navbar onSidebarToggle={handleSidebarToggle} />
       <div className="flex min-h-screen">
       <Sidebar isSidebarOpen={isSidebarOpen} />
         <div className="flex-1 p-4 md:p-6">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-white">Form Transaksi</h1>
-            <p className="text-sm text-emerald-400/60 mt-1">Tambahkan transaksi baru</p>
+            <h1 className="text-2xl font-bold text-emerald-950">Form Transaksi</h1>
+            <p className="text-sm text-emerald-700/80 mt-1">Tambahkan transaksi baru</p>
           </div>
           
-          <div className="bg-emerald-900/50 rounded-xl border border-emerald-800/30 p-6 shadow-lg max-w-2xl">
+          <div className="bg-white rounded-xl border border-emerald-200 p-6 shadow-lg max-w-2xl">
             <form onSubmit={handleFormSubmit}>
               <div className="mb-4">
                 <label className={labelClasses}>Tipe Transaksi</label>
@@ -305,7 +305,7 @@ export default function TransaksiPage() {
                           <button
                             type="button"
                             onClick={() => handleInputChange(index, "harga_satuan", priceSuggestions[index]!.buyback.toString())}
-                            className="text-left px-2 py-1.5 text-[11px] font-medium rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+                            className="text-left px-2 py-1.5 text-[11px] font-medium rounded-md bg-emerald-500/10 text-emerald-700 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
                           >
                             <span className="opacity-70">Buyback:</span> {priceSuggestions[index]!.buyback.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
                           </button>

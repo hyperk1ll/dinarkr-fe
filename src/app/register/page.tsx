@@ -29,15 +29,15 @@ export default function Register() {
       <div className="absolute top-0 right-0 w-96 h-96 bg-gold-500 opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-emerald-400 opacity-5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
 
-      <div className="w-full max-w-md bg-emerald-900 border border-emerald-700/30 rounded-2xl shadow-2xl p-8 relative z-10">
+      <div className="w-full max-w-md bg-emerald-100 border border-emerald-700/30 rounded-2xl shadow-2xl p-8 relative z-10">
         <div className="flex flex-col items-center mb-8">
           <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-gold-500 to-gold-700 flex items-center justify-center mb-4 shadow-lg shadow-gold-500/20">
             <svg className="w-7 h-7 text-emerald-950" fill="currentColor" viewBox="0 0 20 20">
               <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-white">Daftar Akun Baru</h2>
-          <p className="text-emerald-300/60 text-sm mt-1">Isi data di bawah untuk mendaftar</p>
+          <h2 className="text-xl font-bold text-emerald-950">Daftar Akun Baru</h2>
+          <p className="text-emerald-700/80 text-sm mt-1">Isi data di bawah untuk mendaftar</p>
         </div>
         <form onSubmit={handleRegister} className="space-y-5">
           <div className="flex flex-col">
@@ -48,7 +48,7 @@ export default function Register() {
               onChange={(e) => setName(e.target.value)}
               type="text"
               placeholder="Nama lengkap"
-              className="px-4 py-3 bg-emerald-800/50 border border-emerald-700/50 text-white placeholder-emerald-500/50 rounded-xl focus:bg-emerald-800/70 focus:border-gold-500/50 transition-all"
+              className="px-4 py-3 bg-emerald-50 border border-emerald-200 text-emerald-950 placeholder-emerald-500/50 rounded-xl focus:bg-emerald-800/70 focus:border-gold-500/50 transition-all"
               required
             />
           </div>
@@ -60,7 +60,7 @@ export default function Register() {
               onChange={(e) => setEmail(e.target.value)}
               type="text"
               placeholder="nama@email.com"
-              className="px-4 py-3 bg-emerald-800/50 border border-emerald-700/50 text-white placeholder-emerald-500/50 rounded-xl focus:bg-emerald-800/70 focus:border-gold-500/50 transition-all"
+              className="px-4 py-3 bg-emerald-50 border border-emerald-200 text-emerald-950 placeholder-emerald-500/50 rounded-xl focus:bg-emerald-800/70 focus:border-gold-500/50 transition-all"
               required
             />
           </div>
@@ -72,7 +72,7 @@ export default function Register() {
               onChange={(e) => setPassword(e.target.value)}
               type="password"
               placeholder="••••••••"
-              className="px-4 py-3 bg-emerald-800/50 border border-emerald-700/50 text-white placeholder-emerald-500/50 rounded-xl focus:bg-emerald-800/70 focus:border-gold-500/50 transition-all"
+              className="px-4 py-3 bg-emerald-50 border border-emerald-200 text-emerald-950 placeholder-emerald-500/50 rounded-xl focus:bg-emerald-800/70 focus:border-gold-500/50 transition-all"
               required
             />
           </div>
@@ -83,7 +83,7 @@ export default function Register() {
             Daftar
           </button>
         </form>
-        <p className="mt-6 text-sm text-center text-emerald-300/50">
+        <p className="mt-6 text-sm text-center text-emerald-700/80">
           Sudah punya akun?{' '}
           <a href="/" className="text-gold-400 hover:text-gold-300 font-medium transition-colors">Masuk</a>
         </p>

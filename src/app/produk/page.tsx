@@ -105,19 +105,19 @@ export default function ProdukPage() {
   };
 
   return  (
-    <div className="w-full min-h-screen bg-emerald-950">
+    <div className="w-full min-h-screen bg-gray-50">
       <Navbar onSidebarToggle={handleSidebarToggle} />
       <div className="flex flex-col md:flex-row">
         <Sidebar isSidebarOpen={isSidebarOpen} />
         <div className="flex-grow p-4 md:p-6 overflow-x-auto">
           <div className="mb-6 flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold text-white">Daftar Produk</h1>
-              <p className="text-sm text-emerald-400/60 mt-1">Katalog lengkap produk dinar</p>
+              <h1 className="text-2xl font-bold text-emerald-950">Daftar Produk</h1>
+              <p className="text-sm text-emerald-700/80 mt-1">Katalog lengkap produk dinar</p>
             </div>
             <div className="flex flex-col items-end gap-2">
               {produk.length > 0 && produk[0].terakhir_diperbarui && (
-                <div className="text-xs text-emerald-400/80 font-medium bg-emerald-900/40 px-3 py-1.5 rounded-lg border border-emerald-800/50">
+                <div className="text-xs text-emerald-400/80 font-medium bg-emerald-100/40 px-3 py-1.5 rounded-lg border border-emerald-200">
                   Update Terakhir: {new Date(produk[0].terakhir_diperbarui).toLocaleString('id-ID', {
                     day: 'numeric',
                     month: 'long',
@@ -150,12 +150,12 @@ export default function ProdukPage() {
             </div>
           </div>
           <div className="overflow-x-auto">
-            <div className="rounded-xl border border-emerald-800/50 overflow-hidden shadow-lg">
+            <div className="rounded-xl border border-emerald-200 overflow-hidden shadow-lg">
               <table className="min-w-full">
-                <thead className="bg-emerald-900/80 border-b border-emerald-700/30">
+                <thead className="bg-emerald-100/80 border-b border-emerald-700/30">
                   <tr>
                     {['No', 'Gambar', 'Nama', 'Harga Konsumen', 'Harga Buyback', 'Jumlah Stok'].map((header) => (
-                      <th key={header} scope="col" className="px-4 py-3.5 text-left text-[11px] font-bold text-emerald-300/50 uppercase tracking-wider">
+                      <th key={header} scope="col" className="px-4 py-3.5 text-left text-[11px] font-bold text-emerald-700/80 uppercase tracking-wider">
                         {header}
                       </th>
                     ))}
@@ -189,7 +189,7 @@ export default function ProdukPage() {
                             : "Lihat Gambar"}
                         </button>
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm font-semibold text-white">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm font-semibold text-emerald-950">
                         {item.nama}
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap text-sm text-emerald-200">
