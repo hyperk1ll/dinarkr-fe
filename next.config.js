@@ -8,8 +8,8 @@ module.exports = {
     return [
       {
         source: '/api-proxy/:path*',
-        // Rewrite to the backend URL, defaulting to the private IP.
-        destination: `${process.env.BACKEND_URL || 'http://10.50.0.1:7000/api'}/:path*`
+        // We use the VPS public URL as the fallback since 10.50.0.1 might be unreachable from inside the Next.js Docker container.
+        destination: `${process.env.BACKEND_URL || 'http://vps1.hype-lab.cloud:7000/api'}/:path*`
       }
     ];
   },
