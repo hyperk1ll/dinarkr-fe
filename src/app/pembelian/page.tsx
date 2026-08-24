@@ -109,35 +109,35 @@ export default function TransaksiBeliPage() {
           </div>
           <div className="overflow-x-auto">
           {transactions.length > 0 ? (
-            <div className="rounded-xl border border-emerald-200 overflow-hidden shadow-lg">
+            <div className="rounded-xl border border-gray-200 overflow-hidden shadow-sm bg-white">
               <table className="min-w-full">
-                <thead className="bg-emerald-100/80 border-b border-emerald-700/30">
+                <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
                     {['No', 'Tipe', 'Dari', 'Tanggal', 'Nama', 'Total Harga', 'Aksi'].map((h) => (
-                      <th key={h} scope="col" className="px-4 py-3.5 text-left text-[11px] font-bold text-emerald-700/80 uppercase tracking-wider">{h}</th>
+                      <th key={h} scope="col" className="px-4 py-3.5 text-left text-[11px] font-bold text-gray-500 uppercase tracking-wider">{h}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-emerald-800/30">
+                <tbody className="divide-y divide-gray-100">
                   {transactions.map((transaction, index) => (
-                    <tr key={transaction.id_transaksi} className="hover:bg-emerald-800/20 transition-colors">
-                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-emerald-200">{index + 1}</td>
+                    <tr key={transaction.id_transaksi} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-500">{index + 1}</td>
                       <td className="px-4 py-4 whitespace-nowrap">
-                        <span className="inline-flex px-2.5 py-1 rounded-lg text-xs font-bold border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">Beli</span>
+                        <span className="inline-flex px-2.5 py-1 rounded-lg text-xs font-bold border bg-emerald-50 text-emerald-700 border-emerald-200">Beli</span>
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-emerald-700/70">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
                         {transaction.pembelian_dari === "web" ? "Web" : transaction.pembelian_dari === "buyback" ? "Buyback" : "-"}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-emerald-700/70">{formatDate(transaction.tanggal_transaksi)}</td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-emerald-200">{transaction.nama_pembeli}</td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm font-semibold text-gold-400">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{formatDate(transaction.tanggal_transaksi)}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{transaction.nama_pembeli}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm font-semibold text-emerald-700">
                         {Number(transaction.totalHarga).toLocaleString("id-ID", { style: "currency", currency: "IDR" })}
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-2">
-                          <button className="text-xs font-medium text-gold-400 hover:text-gold-300 border border-gold-500/30 hover:border-gold-500/50 bg-gold-500/5 hover:bg-gold-500/10 px-3 py-1.5 rounded-lg transition-all" onClick={() => handleDetailClick(transaction.details)}>Detail</button>
-                          <button className="p-1.5 rounded-lg text-emerald-400 hover:text-emerald-700 hover:bg-emerald-50 transition-all" onClick={() => handleEdit(transaction)}><FaEdit size={14} /></button>
-                          <button className="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all" onClick={() => handleDeleteClick(transaction)}><FaTrash size={14} /></button>
+                          <button className="text-xs font-medium text-emerald-700 hover:text-emerald-800 border border-emerald-300 hover:border-emerald-400 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg transition-all" onClick={() => handleDetailClick(transaction.details)}>Detail</button>
+                          <button className="p-1.5 rounded-lg text-emerald-500 hover:text-emerald-700 hover:bg-emerald-50 transition-all" onClick={() => handleEdit(transaction)}><FaEdit size={14} /></button>
+                          <button className="p-1.5 rounded-lg text-red-400 hover:text-red-600 hover:bg-red-50 transition-all" onClick={() => handleDeleteClick(transaction)}><FaTrash size={14} /></button>
                         </div>
                       </td>
                     </tr>
@@ -147,8 +147,8 @@ export default function TransaksiBeliPage() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="w-16 h-16 rounded-full bg-emerald-800/30 flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-emerald-500/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
               </div>
               <p className="text-emerald-700/80 font-medium">Tidak ada transaksi pembelian ditemukan</p>
             </div>

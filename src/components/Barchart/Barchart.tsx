@@ -38,7 +38,7 @@ interface BarchartProps {
       legend: {
         position: 'top',
         labels: {
-          color: 'rgba(183, 220, 196, 0.7)',
+          color: 'rgba(75, 85, 99, 0.8)',
           font: {
             family: 'Plus Jakarta Sans',
             weight: 'bold',
@@ -48,7 +48,7 @@ interface BarchartProps {
       title: {
         display: true,
         text: 'Total Pembelian, Penjualan, dan Selisih',
-        color: 'rgba(255, 255, 255, 0.9)',
+        color: 'rgba(17, 24, 39, 0.9)',
         font: {
           size: 14,
           family: 'Plus Jakarta Sans',
@@ -59,20 +59,20 @@ interface BarchartProps {
     scales: {
       x: {
         ticks: {
-          color: 'rgba(183, 220, 196, 0.6)',
+          color: 'rgba(75, 85, 99, 0.7)',
           font: { family: 'Plus Jakarta Sans' },
         },
         grid: {
-          color: 'rgba(39, 150, 95, 0.1)',
+          color: 'rgba(229, 231, 235, 0.8)',
         },
       },
       y: {
         ticks: {
-          color: 'rgba(183, 220, 196, 0.6)',
+          color: 'rgba(75, 85, 99, 0.7)',
           font: { family: 'Plus Jakarta Sans' },
         },
         grid: {
-          color: 'rgba(39, 150, 95, 0.1)',
+          color: 'rgba(229, 231, 235, 0.8)',
         },
       },
     },

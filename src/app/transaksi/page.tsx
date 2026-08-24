@@ -180,8 +180,8 @@ export default function TransaksiPage() {
     }
   };
 
-  const inputClasses = "mt-1 block w-full bg-emerald-50 border border-emerald-200 text-emerald-950 placeholder-emerald-500/50 rounded-xl p-2.5 focus:bg-emerald-800/70 focus:border-gold-500/50 transition-all text-sm";
-  const labelClasses = "block text-sm font-semibold text-emerald-200/80 mb-1";
+  const inputClasses = "mt-1 block w-full bg-white border border-gray-300 text-gray-900 placeholder-gray-400 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm";
+  const labelClasses = "block text-sm font-semibold text-gray-700 mb-1";
 
   return (
     <div className="w-full min-h-screen bg-gray-50">
@@ -252,8 +252,8 @@ export default function TransaksiPage() {
                 </div>
               )}
               {formData.detail.map((detail, index) => (
-                <div key={index} className="mb-4 border border-emerald-700/30 p-4 rounded-xl bg-emerald-800/20">
-                  <h2 className="text-sm font-semibold text-gold-400 mb-3">Produk {index + 1}</h2>
+                <div key={index} className="mb-4 border border-gray-200 p-4 rounded-xl bg-gray-50">
+                  <h2 className="text-sm font-semibold text-emerald-700 mb-3">Produk {index + 1}</h2>
                   <div className="mb-3">
                     <select
                       value={detail.id_dinar}
@@ -298,14 +298,14 @@ export default function TransaksiPage() {
                           <button
                             type="button"
                             onClick={() => handleInputChange(index, "harga_satuan", priceSuggestions[index]!.konsumen.toString())}
-                            className="text-left px-2 py-1.5 text-[11px] font-medium rounded-md bg-gold-500/10 text-gold-400 border border-gold-500/20 hover:bg-gold-500/20 transition-colors"
+                          className="text-left px-2 py-1.5 text-[11px] font-medium rounded-md bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition-colors"
                           >
                             <span className="opacity-70">Konsumen:</span> {priceSuggestions[index]!.konsumen.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
                           </button>
                           <button
                             type="button"
                             onClick={() => handleInputChange(index, "harga_satuan", priceSuggestions[index]!.buyback.toString())}
-                            className="text-left px-2 py-1.5 text-[11px] font-medium rounded-md bg-emerald-500/10 text-emerald-700 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+                          className="text-left px-2 py-1.5 text-[11px] font-medium rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors"
                           >
                             <span className="opacity-70">Buyback:</span> {priceSuggestions[index]!.buyback.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
                           </button>
@@ -315,7 +315,7 @@ export default function TransaksiPage() {
                   </div>
                   <button
                     type="button"
-                    className="mt-3 text-red-400 hover:text-red-300 text-xs font-medium flex items-center gap-1 transition-colors"
+                    className="mt-3 text-red-500 hover:text-red-600 text-xs font-medium flex items-center gap-1 transition-colors"
                     onClick={() => removeDetail(index)}
                   >
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -328,7 +328,7 @@ export default function TransaksiPage() {
               <div className="flex flex-wrap gap-3 mt-4">
                 <button
                   type="button"
-                  className="text-gold-400 hover:text-gold-300 border border-gold-500/30 hover:border-gold-500/50 bg-gold-500/5 hover:bg-gold-500/10 font-medium rounded-xl text-sm px-4 py-2.5 transition-all flex items-center gap-2"
+                  className="text-emerald-700 hover:text-emerald-800 border border-emerald-300 hover:border-emerald-400 bg-emerald-50 hover:bg-emerald-100 font-medium rounded-xl text-sm px-4 py-2.5 transition-all flex items-center gap-2"
                   onClick={addDetail}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

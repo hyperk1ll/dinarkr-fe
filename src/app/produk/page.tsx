@@ -150,21 +150,21 @@ export default function ProdukPage() {
             </div>
           </div>
           <div className="overflow-x-auto">
-            <div className="rounded-xl border border-emerald-200 overflow-hidden shadow-lg">
+            <div className="rounded-xl border border-gray-200 overflow-hidden shadow-sm bg-white">
               <table className="min-w-full">
-                <thead className="bg-emerald-100/80 border-b border-emerald-700/30">
+                <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
                     {['No', 'Gambar', 'Nama', 'Harga Konsumen', 'Harga Buyback', 'Jumlah Stok'].map((header) => (
-                      <th key={header} scope="col" className="px-4 py-3.5 text-left text-[11px] font-bold text-emerald-700/80 uppercase tracking-wider">
+                      <th key={header} scope="col" className="px-4 py-3.5 text-left text-[11px] font-bold text-gray-500 uppercase tracking-wider">
                         {header}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-emerald-800/30">
+                <tbody className="divide-y divide-gray-100">
                   {produk.map((item, index) => (
-                    <tr key={item.id} className="hover:bg-emerald-800/20 transition-colors">
-                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-emerald-200">
+                    <tr key={item.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
                         {index + 1}
                       </td>
                       <td className="px-2 py-4 whitespace-nowrap text-sm">
@@ -182,30 +182,30 @@ export default function ProdukPage() {
                         )}
                         <button
                           onClick={() => toggleImageVisibility(item.id)}
-                          className="text-xs font-medium text-gold-400 hover:text-gold-300 border border-gold-500/30 hover:border-gold-500/50 bg-gold-500/5 hover:bg-gold-500/10 px-3 py-1.5 rounded-lg mt-2 transition-all"
+                          className="text-xs font-medium text-emerald-700 hover:text-emerald-800 border border-emerald-300 hover:border-emerald-400 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg mt-2 transition-all"
                         >
                           {showImages.has(item.id)
                             ? "Sembunyikan"
                             : "Lihat Gambar"}
                         </button>
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm font-semibold text-emerald-950">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
                         {item.nama}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-emerald-200">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
                         {Number(item.harga_konsumen).toLocaleString("id-ID", {
                           style: "currency",
                           currency: "IDR",
                         })}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-emerald-200">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
                         {Number(item.harga_buyback).toLocaleString("id-ID", {
                           style: "currency",
                           currency: "IDR",
                         })}
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap">
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-gold-500/10 text-gold-400 border border-gold-500/20">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                           {item.jumlah_stok}
                         </span>
                       </td>

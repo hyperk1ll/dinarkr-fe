@@ -71,12 +71,12 @@ export default function Login() {
         <div className="w-full md:w-1/2 bg-gradient-to-br from-emerald-900 to-emerald-950 p-8 md:p-10 flex flex-col justify-center">
           <div className="flex flex-col items-center mb-8">
             <div className="mb-4">
-              <Image src="/logo.png" alt="DinarKR Logo" width={56} height={56} className="object-contain" />
+              <Image src="/logo.png" alt="DinarKR Logo" width={128} height={56} className="object-contain" />
             </div>
-            <h1 className="text-xl font-bold text-emerald-950">Selamat Datang</h1>
-            <p className="text-emerald-700/80 text-sm mt-1">Masukkan kredensial untuk melanjutkan</p>
+            <h1 className="text-xl font-bold text-gold-300">Selamat Datang</h1>
+            <p className="text-emerald-300/70 text-sm mt-1">Masukkan kredensial untuk melanjutkan</p>
           </div>
-          
+
           <form onSubmit={handleLogin} className="space-y-5">
             <div className="flex flex-col">
               <label htmlFor="email" className="text-sm font-semibold text-emerald-200/80 mb-1.5">Email</label>
@@ -104,18 +104,17 @@ export default function Login() {
             </div>
             <button
               type="submit"
-              className={`w-full py-3 px-4 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 shadow-lg ${
-                isLoading 
-                  ? 'bg-gold-600/50 text-gold-200/50 cursor-not-allowed' 
-                  : 'bg-gradient-to-r from-gold-500 to-gold-600 text-emerald-950 hover:from-gold-400 hover:to-gold-500 hover:shadow-gold-500/30 hover:scale-[1.02] active:scale-[0.98]'
-              }`}
+              className={`w-full py-3 px-4 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 shadow-lg ${isLoading
+                ? 'bg-gold-600/50 text-gold-200/50 cursor-not-allowed'
+                : 'bg-gradient-to-r from-gold-500 to-gold-600 text-emerald-950 hover:from-gold-400 hover:to-gold-500 hover:shadow-gold-500/30 hover:scale-[1.02] active:scale-[0.98]'
+                }`}
               disabled={isLoading}
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
                   <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
                   Memproses...
                 </span>
