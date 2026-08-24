@@ -50,7 +50,7 @@ export default function LineChart({ data, title }: LineChartProps) {
       legend: {
         position: 'top',
         labels: {
-          color: 'rgba(255, 255, 255, 0.9)',
+          color: 'rgba(75, 85, 99, 0.8)',
           font: {
             family: 'Plus Jakarta Sans',
             weight: 'bold',
@@ -60,7 +60,7 @@ export default function LineChart({ data, title }: LineChartProps) {
       title: {
         display: !!title,
         text: title || '',
-        color: 'rgba(255, 255, 255, 0.9)',
+        color: 'rgba(17, 24, 39, 0.9)',
         font: {
           size: 16,
           family: 'Plus Jakarta Sans',
@@ -85,23 +85,23 @@ export default function LineChart({ data, title }: LineChartProps) {
     scales: {
       x: {
         ticks: {
-          color: 'rgba(183, 220, 196, 0.8)',
+          color: 'rgba(75, 85, 99, 0.7)',
           font: { family: 'Plus Jakarta Sans' },
         },
         grid: {
-          color: 'rgba(39, 150, 95, 0.15)',
+          color: 'rgba(229, 231, 235, 0.8)',
         },
       },
       y: {
         ticks: {
-          color: 'rgba(183, 220, 196, 0.8)',
+          color: 'rgba(75, 85, 99, 0.7)',
           font: { family: 'Plus Jakarta Sans' },
           callback: function(value) {
             return new Intl.NumberFormat('id-ID', { notation: "compact", compactDisplay: "short" }).format(value as number);
           }
         },
         grid: {
-          color: 'rgba(39, 150, 95, 0.15)',
+          color: 'rgba(229, 231, 235, 0.8)',
         },
       },
     },
