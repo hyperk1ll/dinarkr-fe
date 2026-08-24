@@ -70,10 +70,8 @@ export default function Login() {
         {/* Right side - Form */}
         <div className="w-full md:w-1/2 bg-gradient-to-br from-emerald-900 to-emerald-950 p-8 md:p-10 flex flex-col justify-center">
           <div className="flex flex-col items-center mb-8">
-            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-gold-500 to-gold-700 flex items-center justify-center mb-4 shadow-lg shadow-gold-500/20">
-              <svg className="w-7 h-7 text-emerald-950" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM8 12V8l4 2-4 2z"/>
-              </svg>
+            <div className="mb-4">
+              <Image src="/logo.png" alt="DinarKR Logo" width={56} height={56} className="object-contain" />
             </div>
             <h1 className="text-xl font-bold text-emerald-950">Selamat Datang</h1>
             <p className="text-emerald-700/80 text-sm mt-1">Masukkan kredensial untuk melanjutkan</p>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import axios from 'axios';
 
 export default function Register() {
@@ -31,10 +32,8 @@ export default function Register() {
 
       <div className="w-full max-w-md bg-emerald-100 border border-emerald-700/30 rounded-2xl shadow-2xl p-8 relative z-10">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-gold-500 to-gold-700 flex items-center justify-center mb-4 shadow-lg shadow-gold-500/20">
-            <svg className="w-7 h-7 text-emerald-950" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
-            </svg>
+          <div className="mb-4">
+            <Image src="/logo.png" alt="DinarKR Logo" width={56} height={56} className="object-contain" />
           </div>
           <h2 className="text-xl font-bold text-emerald-950">Daftar Akun Baru</h2>
           <p className="text-emerald-700/80 text-sm mt-1">Isi data di bawah untuk mendaftar</p>
