@@ -167,12 +167,29 @@ export default function GrafikHargaPage() {
   const chartData = useMemo(() => {
     if (!filteredRiwayat || filteredRiwayat.length === 0) return null;
 
+    const fullDates = filteredRiwayat.map((r) => {
+      const d = new Date(r.tanggal);
+      const datePart = d.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+      const timePart = d.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }).replace(".", ":");
+      return `${datePart}, ${timePart}`;
+    });
+
     const labels = filteredRiwayat.map((r) => {
       const d = new Date(r.tanggal);
-      if (selectedRange === "ALL" || selectedRange === "1Y") {
-        return d.toLocaleDateString("id-ID", { month: "short", year: "2-digit" });
+      if (selectedRange === "1M" || selectedRange === "3M") {
+        return d.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
       }
-      return d.toLocaleDateString("id-ID", { day: "numeric", month: "short" });
+      if (selectedRange === "6M" || selectedRange === "1Y") {
+        return d.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+      }
+      return d.toLocaleDateString("id-ID", { month: "short", year: "numeric" });
     });
 
     const dataKonsumen = filteredRiwayat.map((r) => Number(r.harga_konsumen));
@@ -180,6 +197,7 @@ export default function GrafikHargaPage() {
 
     return {
       labels,
+      fullDates,
       datasets: [
         {
           label: "Harga Konsumen (Beli)",
@@ -221,11 +239,30 @@ export default function GrafikHargaPage() {
         percent: 0,
         min: 0,
         max: 0,
+        firstFullDate: "-",
+        lastFullDate: "-",
       };
     }
 
-    const firstPrice = Number(filteredRiwayat[0].harga_konsumen);
-    const lastPrice = Number(filteredRiwayat[filteredRiwayat.length - 1].harga_konsumen);
+    const firstItem = filteredRiwayat[0];
+    const lastItem = filteredRiwayat[filteredRiwayat.length - 1];
+
+    const formatDateTime = (iso: string) => {
+      const d = new Date(iso);
+      const datePart = d.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+      const timePart = d.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }).replace(".", ":");
+      return `${datePart}, ${timePart}`;
+    };
+
+    const firstPrice = Number(firstItem.harga_konsumen);
+    const lastPrice = Number(lastItem.harga_konsumen);
     const diff = lastPrice - firstPrice;
     const percent = firstPrice > 0 ? (diff / firstPrice) * 100 : 0;
 
@@ -233,7 +270,16 @@ export default function GrafikHargaPage() {
     const min = Math.min(...prices);
     const max = Math.max(...prices);
 
-    return { firstPrice, lastPrice, diff, percent, min, max };
+    return {
+      firstPrice,
+      lastPrice,
+      diff,
+      percent,
+      min,
+      max,
+      firstFullDate: formatDateTime(firstItem.tanggal),
+      lastFullDate: formatDateTime(lastItem.tanggal),
+    };
   }, [filteredRiwayat]);
 
   // Handler saat user klik koin dari daftar tabel untuk melihat grafiknya
@@ -414,6 +460,18 @@ export default function GrafikHargaPage() {
                           </span>
                         )}
                       </div>
+
+                      {/* Display exact date, month, year, time */}
+                      {stats.lastFullDate !== "-" && (
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-950 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+                            <svg className="w-3.5 h-3.5 text-gold-600" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"/>
+                            </svg>
+                            Data Terakhir: <strong className="text-emerald-900">{stats.lastFullDate}</strong>
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -436,31 +494,43 @@ export default function GrafikHargaPage() {
                 </div>
               </div>
 
-              {/* Summary Stats Strip (Terendah, Tertinggi, Total Riwayat) */}
+              {/* Summary Stats Strip (Terendah, Tertinggi, Tanggal Lengkap) */}
               {filteredRiwayat.length > 0 && (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4 pt-3 border-t border-gray-100 text-xs">
-                  <div className="p-2 rounded-lg bg-gray-50">
-                    <span className="text-gray-500 block">Harga Awal Periode:</span>
-                    <span className="font-bold text-gray-800">
+                  <div className="p-2.5 rounded-xl bg-gray-50 border border-gray-100">
+                    <span className="text-gray-500 block text-[11px]">Awal Periode:</span>
+                    <span className="font-bold text-gray-800 block text-xs">
                       Rp {stats.firstPrice.toLocaleString("id-ID")}
                     </span>
+                    <span className="text-[10px] text-gray-400 mt-0.5 block">
+                      📅 {stats.firstFullDate}
+                    </span>
                   </div>
-                  <div className="p-2 rounded-lg bg-gray-50">
-                    <span className="text-gray-500 block">Harga Terendah:</span>
-                    <span className="font-bold text-emerald-700">
+                  <div className="p-2.5 rounded-xl bg-emerald-50/50 border border-emerald-100/60">
+                    <span className="text-gray-500 block text-[11px]">Harga Terendah:</span>
+                    <span className="font-bold text-emerald-700 block text-xs">
                       Rp {stats.min.toLocaleString("id-ID")}
                     </span>
-                  </div>
-                  <div className="p-2 rounded-lg bg-gray-50">
-                    <span className="text-gray-500 block">Harga Tertinggi:</span>
-                    <span className="font-bold text-gold-700">
-                      Rp {stats.max.toLocaleString("id-ID")}
+                    <span className="text-[10px] text-emerald-600/70 mt-0.5 block">
+                      Harga minimum grafik
                     </span>
                   </div>
-                  <div className="p-2 rounded-lg bg-gray-50">
-                    <span className="text-gray-500 block">Total Data Titik:</span>
-                    <span className="font-bold text-gray-800">
-                      {filteredRiwayat.length} hari rekam jejak
+                  <div className="p-2.5 rounded-xl bg-gold-50/50 border border-gold-100/60">
+                    <span className="text-gray-500 block text-[11px]">Harga Tertinggi:</span>
+                    <span className="font-bold text-gold-700 block text-xs">
+                      Rp {stats.max.toLocaleString("id-ID")}
+                    </span>
+                    <span className="text-[10px] text-gold-600/70 mt-0.5 block">
+                      Puncak harga periode
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-gray-50 border border-gray-100">
+                    <span className="text-gray-500 block text-[11px]">Data Terakhir:</span>
+                    <span className="font-bold text-gray-800 block text-xs">
+                      Rp {stats.lastPrice.toLocaleString("id-ID")}
+                    </span>
+                    <span className="text-[10px] text-gray-400 mt-0.5 block">
+                      📅 {stats.lastFullDate}
                     </span>
                   </div>
                 </div>

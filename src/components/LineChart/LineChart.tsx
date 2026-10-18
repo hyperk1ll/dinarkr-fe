@@ -27,6 +27,7 @@ ChartJS.register(
 interface LineChartProps {
   data: {
     labels: string[];
+    fullDates?: string[];
     datasets: {
       label: string;
       data: number[];
@@ -84,17 +85,17 @@ export default function LineChart({ data, title, isDark = false }: LineChartProp
       },
       tooltip: {
         backgroundColor: '#0f172a',
-        titleColor: '#e2e8f0',
+        titleColor: '#fbbf24',
         bodyColor: '#f8fafc',
-        borderColor: 'rgba(212, 168, 23, 0.4)',
+        borderColor: 'rgba(212, 168, 23, 0.5)',
         borderWidth: 1,
-        padding: 12,
-        boxPadding: 6,
+        padding: 14,
+        boxPadding: 8,
         usePointStyle: true,
-        cornerRadius: 10,
+        cornerRadius: 12,
         titleFont: {
           family: "'Plus Jakarta Sans', sans-serif",
-          weight: 700,
+          weight: 800,
           size: 13,
         },
         bodyFont: {
@@ -103,6 +104,15 @@ export default function LineChart({ data, title, isDark = false }: LineChartProp
           size: 12,
         },
         callbacks: {
+          title: function(tooltipItems) {
+            if (!tooltipItems.length) return '';
+            const index = tooltipItems[0].dataIndex;
+            const fullDate = data.fullDates?.[index];
+            if (fullDate) {
+              return `📅 ${fullDate}`;
+            }
+            return tooltipItems[0].label;
+          },
           label: function(context) {
             let label = context.dataset.label || '';
             if (label) {
