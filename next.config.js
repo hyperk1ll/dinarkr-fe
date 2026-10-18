@@ -2,7 +2,7 @@
 module.exports = {
   output: 'standalone',
   images: {
-    domains: ['drive.google.com', 'dinarkr.com'],
+    domains: ['drive.google.com', 'dinarkr.com', 'dinarkhoirurrooziqiin.com'],
   },
   async rewrites() {
     return [
