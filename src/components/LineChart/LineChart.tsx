@@ -85,7 +85,7 @@ export default function LineChart({ data, title, isDark = false }: LineChartProp
       },
       tooltip: {
         backgroundColor: '#0f172a',
-        titleColor: '#fbbf24',
+        titleColor: '#4d4d4dff',
         bodyColor: '#f8fafc',
         borderColor: 'rgba(212, 168, 23, 0.5)',
         borderWidth: 1,
@@ -95,7 +95,7 @@ export default function LineChart({ data, title, isDark = false }: LineChartProp
         cornerRadius: 12,
         titleFont: {
           family: "'Plus Jakarta Sans', sans-serif",
-          weight: 800,
+          weight: 400,
           size: 13,
         },
         bodyFont: {
@@ -104,16 +104,16 @@ export default function LineChart({ data, title, isDark = false }: LineChartProp
           size: 12,
         },
         callbacks: {
-          title: function(tooltipItems) {
+          title: function (tooltipItems) {
             if (!tooltipItems.length) return '';
             const index = tooltipItems[0].dataIndex;
             const fullDate = data.fullDates?.[index];
             if (fullDate) {
-              return `📅 ${fullDate}`;
+              return `${fullDate}`;
             }
             return tooltipItems[0].label;
           },
-          label: function(context) {
+          label: function (context) {
             let label = context.dataset.label || '';
             if (label) {
               label += ': ';
@@ -131,7 +131,7 @@ export default function LineChart({ data, title, isDark = false }: LineChartProp
         ticks: {
           color: textColor,
           maxTicksLimit: 8,
-          font: { 
+          font: {
             family: "'Plus Jakarta Sans', sans-serif",
             size: 11
           },
@@ -147,11 +147,11 @@ export default function LineChart({ data, title, isDark = false }: LineChartProp
         position: 'right',
         ticks: {
           color: textColor,
-          font: { 
+          font: {
             family: "'Plus Jakarta Sans', sans-serif",
             size: 11
           },
-          callback: function(value) {
+          callback: function (value) {
             const num = value as number;
             if (num >= 1000000) {
               return (num / 1000000).toFixed(1).replace('.0', '') + ' jt';
